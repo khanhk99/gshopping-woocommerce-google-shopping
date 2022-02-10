@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/gshopping-woocommerce-google-shopping.iml" filepath="$PROJECT_DIR$/.idea/gshopping-woocommerce-google-shopping.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../test/.idea/test.iml" filepath="$PROJECT_DIR$/../test/.idea/test.iml" />
+      <module fileurl="file://D:/xampp/htdocs/mainsv/wp-content/plugins/woo-multi-currency/.idea/woo-multi-currency.iml" filepath="D:/xampp/htdocs/mainsv/wp-content/plugins/woo-multi-currency/.idea/woo-multi-currency.iml" />
+      <module fileurl="file://D:/xampp/htdocs/mainsv/wp-content/plugins/woocommerce/.idea/woocommerce.iml" filepath="D:/xampp/htdocs/mainsv/wp-content/plugins/woocommerce/.idea/woocommerce.iml" />
+    </modules>
+  </component>
+</project>

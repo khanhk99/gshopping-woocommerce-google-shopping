@@ -1,0 +1,360 @@
+:root{
+    --pfvi-prevent: #eee;
+}
+
+* {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    scroll-behavior: smooth;
+}
+
+/**
+Default
+ */
+.pfvi_mt-1 {
+    margin-top: 1rem;
+}
+
+.pfvi_mt-2 {
+    margin-top: 2rem;
+}
+
+.pfvi_mt-3 {
+    margin-top: 3rem;
+}
+
+.pfvi_mt-4 {
+    margin-top: 4rem;
+}
+
+/**
+End default
+ */
+
+.vi-pfvi-accordion .vi-pfvi-accordion-title .vi-ui.pointing.label:before {
+    left: 5% !important;
+}
+
+.vi-pfvi-accordion {
+    margin-top: 10px;
+    margin-bottom: 30px;
+}
+
+.pfvi-message .pfvi-message-head {
+    font-weight: bold;
+}
+
+.vi-pfvi-accordion-button {
+    margin-bottom: 20px;
+    margin-right: 20px;
+}
+
+.vi-pfvi-accordion-content label {
+    font-weight: 500 !important;
+}
+
+.pfvi_none_underline {
+    text-decoration: none;
+}
+
+.pfvi_custom-product-value {
+    padding-left: 20px;
+}
+
+.pfvi_custom-product-value select {
+    max-width: 25em;
+}
+
+.pfvi_custom-product {
+    display: flex;
+    align-items: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+}
+
+.pfvi_custom-product-0 {
+    border-bottom: 1px solid #c3c4c7;
+}
+
+.pfvi_custom-product a {
+    width: 150px;
+}
+
+.pfvi_custom-product-padding {
+    padding-left: 20px;
+}
+
+.pfvi_d-flex {
+    display: flex;
+}
+
+.pfvi_color-b22222 {
+    color: #b22222;
+}
+
+.pfvi_button-sticky {
+    position: sticky;
+    bottom: 20px;
+    z-index: 9;
+}
+
+#pfvi_noti-response {
+    max-height: 500px;
+    overflow: auto;
+}
+
+.pfvi_noti-success {
+    color: #4deb19;
+}
+
+.pfvi_notice-oauth {
+    text-align: center;
+}
+
+#pfvi_loading_page {
+    position: fixed;
+    z-index: 9999;
+    background: #000;
+    width: 100%;
+    height: 100%;
+    opacity: 0.7;
+    top: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pfvi_progress {
+    width: 50%;
+    height: 25px;
+    background-color: #fbf6f6a3;
+    border-radius: 8px;
+    margin: 50px auto;
+}
+
+.pfvi_progress .pfvi_bar {
+    height: 100%;
+    background: #ffffff;
+    border-radius: 8px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    color: #000;
+    font-weight: bold;
+}
+
+.pfvi_progress .pfvi_progress-calculate {
+    margin-right: 10px;
+}
+
+.pfvi_title {
+    width: 100px;
+}
+
+.vi-ui.styled.accordion .pfvi_guide-wrap {
+    box-shadow: none !important;
+}
+
+.vi-ui.pfvi_guide-wrap.accordion .title {
+    border: none !important;
+    font-weight: normal !important;
+    color: #444444 !important;
+    display: flex;
+}
+
+.pfvi_guide-wrap-content {
+    padding-left: 1em !important;
+}
+
+.pfvi_image-div {
+    width: 100%;
+    text-align: center;
+    padding: 0 20px;
+}
+
+.pfvi_image-div img {
+    max-width: 100%;
+}
+
+.pfvi_wrap-guide {
+    display: flex;
+    justify-content: space-between;
+}
+
+.pfvi_guide-menu {
+    max-width: 20%;
+}
+
+.pfvi_guide-menu a {
+    text-decoration: none;
+}
+
+.pfvi_guide-main {
+    max-width: 75%;
+}
+
+.pfvi_guide-menu-sticky {
+    padding: 0.7em 1em;
+    box-shadow: 0 1px 2px 0 rgb(34 36 38 / 15%), 0 0 0 1px rgb(34 36 38 / 15%);
+    border-radius: 0.2em;
+    position: sticky;
+    z-index: 9;
+    top: 50px;
+}
+
+/*full screen*/
+body.pfvi_full-screen {
+    margin-top: -32px;
+}
+
+.pfvi_full-screen #wpcontent {
+    margin: 0;
+    padding: 0;
+}
+
+.pfvi_full-screen #adminmenumain, .pfvi_full-screen #wpadminbar, .pfvi_full-screen .notice-info, .pfvi_full-screen .notice, .pfvi_full-screen #wpfooter, .pfvi_full-screen .villatheme-dashboard {
+    display: none;
+}
+
+.pfvi_wizard-logo {
+    text-align: center;
+    margin-top: 24px;
+    margin-bottom: 24px;
+}
+
+.pfvi_wizard-step {
+    width: 60vw;
+    min-height: 30vh;
+    background: #fff;
+    margin: 0 auto;
+    box-shadow: 0 1px 3px rgb(0 0 0 / 13%);
+    padding: 24px 24px 40px;
+    display: none;
+}
+
+.pfvi_wizard-step.active {
+    display: block;
+}
+
+.pfvi_wizard-card {
+    box-shadow: 0 0 3px 1px #d3d3d3;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.pfvi_wizard-card label {
+    padding: 15px 15px;
+    display: flex;
+    align-items: center;
+}
+
+.pfvi_wizard-card input[type=checkbox] {
+    display: none;
+}
+
+.pfvi_wizard-card__logo {
+    margin-right: 20px;
+}
+
+.pfvi_wizard-card__logo span {
+    width: 30px;
+    height: 30px;
+    font-size: 30px;
+}
+
+.pfvi_wizard-card__title {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.pfvi_wizard-card:hover, .pfvi_wizard-card.active {
+    box-shadow: 0 0 3px 1px #a7bd0d;
+}
+
+.pfvi_wizard-card:hover .pfvi_wizard-card__logo span, .pfvi_wizard-card.active .pfvi_wizard-card__logo span {
+    color: #a7bd0d;
+}
+
+.pfvi_wizard-card.active .pfvi_wizard-card__title {
+    color: #a7bd0d;
+}
+
+.pfvi_wizard-step-main {
+    padding-bottom: 20px;
+    padding-top: 20px;
+    border-bottom: 1px solid var(--pfvi-prevent);
+}
+
+.pfvi_wizard-step-bottom {
+    padding: 20px 0;
+}
+
+.pfvi_wizard-step-top h1 {
+    color: #666;
+}
+
+.pfvi_wizard-step-top {
+    border-bottom: 1px solid var(--pfvi-prevent);
+}
+
+#config_google_merchant .pfvi_wizard-step-main table {
+    display: none;
+}
+
+#config_google_merchant .pfvi_wizard-step-main table.active {
+    display: inline-table;
+}
+
+.pfvi_wizard-step .message {
+    margin-top: 40px !important;
+}
+
+.pfvi_wizard-merchant-option {
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+}
+
+.pfvi_wizard-merchant-option:after {
+    display: block;
+    clear: both;
+    content: "";
+    position: relative;
+    left: 0;
+    bottom: 0;
+    height: 1px;
+    width: 50%;
+    border-bottom: 1px solid var(--pfvi-prevent);
+    padding-top: 30px;
+}
+
+#config_google_merchant .pfvi_wizard-step-main {
+    border-bottom: unset;
+}
+
+.pfvi_wizard-complete-card_item{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--pfvi-prevent);
+    padding: 20px;
+}
+
+.pfvi_wizard-complete-card{
+    border-color: var(--pfvi-prevent);
+    border-width: 1px 1px 0px 1px;
+    border-style: solid;
+}
+
+#complete_wizard .pfvi_wizard-step-main{
+    border: unset;
+}
+
+.toplevel_page_vi-product-feed #wpcontent{
+    padding: 0;
+}
+
+.toplevel_page_vi-product-feed .wrap{
+    padding: 0 20px;
+}

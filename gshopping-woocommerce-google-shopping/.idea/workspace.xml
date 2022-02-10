@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="ec7e7af7-6d17-4e94-bd1f-c7e3b36dce4e" name="Default Changelist" comment="" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerSettings" doNotAsk="true" synchronizationState="SYNCHRONIZE">
+    <pharConfigPath>$PROJECT_DIR$/gshopping-woocommerce-google-shopping/composer.json</pharConfigPath>
+    <execution>
+      <executable />
+    </execution>
+  </component>
+  <component name="JsBowerSettings">
+    <node-interpreter value="project" />
+    <bower-package value="" />
+    <bower.json value="" />
+  </component>
+  <component name="PhpWorkspaceProjectConfiguration">
+    <include_path>
+      <path value="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/vendor/firebase/php-jwt" />
+      <path value="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/vendor/guzzlehttp/guzzle" />
+      <path value="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/vendor/guzzlehttp/promises" />
+      <path value="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/vendor/google/apiclient-services" />
+      <path value="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/vendor/google/apiclient" />
+      <path value="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/vendor/phpseclib/phpseclib" />
+      <path value="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/vendor/google/auth" />
+      <path value="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/vendor/monolog/monolog" />
+      <path value="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/vendor/psr/cache" />
+      <path value="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/vendor/psr/http-message" />
+      <path value="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/vendor/psr/log" />
+      <path value="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/vendor/composer" />
+      <path value="D:/xampp/htdocs/mainsv" />
+    </include_path>
+  </component>
+  <component name="ProjectId" id="24lEgT09vkvu52bRvTytQWnxkGP" />
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="D:/xampp/htdocs/mainsv/wp-content/plugins/woo-multi-currency" />
+    <property name="settings.editor.selected.configurable" value="JavaScript.Libraries" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ec7e7af7-6d17-4e94-bd1f-c7e3b36dce4e" name="Default Changelist" comment="" />
+      <created>1644196883414</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1644196883414</updated>
+      <workItem from="1644196884719" duration="4066000" />
+      <workItem from="1644201123860" duration="44000" />
+      <workItem from="1644201186286" duration="9122000" />
+      <workItem from="1644216001201" duration="10205000" />
+      <workItem from="1644281754350" duration="21586000" />
+      <workItem from="1644368648864" duration="26817000" />
+      <workItem from="1644454951202" duration="10252000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+</project>

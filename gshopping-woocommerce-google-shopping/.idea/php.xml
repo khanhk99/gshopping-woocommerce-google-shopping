@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PhpIncludePathManager">
+    <include_path>
+      <path value="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/vendor/firebase/php-jwt" />
+      <path value="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/vendor/guzzlehttp/guzzle" />
+      <path value="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/vendor/guzzlehttp/promises" />
+      <path value="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/vendor/google/apiclient-services" />
+      <path value="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/vendor/google/apiclient" />
+      <path value="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/vendor/phpseclib/phpseclib" />
+      <path value="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/vendor/google/auth" />
+      <path value="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/vendor/monolog/monolog" />
+      <path value="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/vendor/psr/cache" />
+      <path value="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/vendor/psr/http-message" />
+      <path value="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/vendor/psr/log" />
+      <path value="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/vendor/composer" />
+      <path value="D:/xampp/htdocs/mainsv" />
+    </include_path>
+  </component>
+  <component name="PhpProjectSharedConfiguration" php_language_level="7.3" />
+</project>
