@@ -16,7 +16,7 @@ jQuery(document).ready(function (jQuery) {
 
             let data = {};
             data['_ajax_nonce'] = pfvi_destination.nonce;
-            data['action'] = "pfvi_clear_data_xml";
+            data['action'] = 'pfvi_clear_data_xml';
             data['language'] = language;
             jQuery.ajax({
                 url: pfvi_destination.ajax_url,
@@ -88,9 +88,9 @@ jQuery(document).ready(function (jQuery) {
                 data: data,
                 success: function (res) {
                     console.log(res);
-                    let response = JSON.parse(res);
-                    console.log(response);
-                    jQuery(id + ' .field-sheet-id').val(response.spreadsheetId);
+                    // let response = JSON.parse(res);
+                    // console.log(response);
+                    jQuery(id + ' .field-sheet-id').val(res.spreadsheetId);
                     jQuery(id + ' .field-sheet-range').val("Sheet1");
                 },
                 error(error) {
@@ -118,9 +118,9 @@ jQuery(document).ready(function (jQuery) {
                         data: data,
                         success: function (res) {
                             console.log(res);
-                            let response = JSON.parse(res)
-                            console.log(response);
-                            jQuery(id + ' .field-sheet-id').val(response.spreadsheetId);
+                            // let response = JSON.parse(res)
+                            // console.log(response);
+                            jQuery(id + ' .field-sheet-id').val(res.spreadsheetId);
                             jQuery(id + ' .field-sheet-range').val("Sheet1");
                         },
                         error(error) {

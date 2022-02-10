@@ -435,7 +435,7 @@ class Product_Feed_Admin {
 
 	public function generate_xml( $language ) {
 		if ( isset( $_POST['language'] ) ) {
-			$language = sanitize_text_field($_POST['language']);
+			$language = sanitize_text_field( $_POST['language'] );
 		}
 
 		$name_file_xml = 'feed-' . $language;
@@ -485,7 +485,7 @@ class Product_Feed_Admin {
 	}
 
 	public function clear_xml() {
-		$language = sanitize_text_field($_POST['language']);
+		$language = sanitize_text_field( $_POST['language'] );
 		$xml_body = '<?xml version="1.0" ?>
 			<rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">
 				<channel>
@@ -824,7 +824,7 @@ class Product_Feed_Admin {
 	}
 
 	public function get_all_product() {
-		$language = sanitize_text_field($_GET['language']);
+		$language = sanitize_text_field( $_GET['language'] );
 
 		$products = get_posts( array(
 			'post_type'   => 'product',
@@ -857,12 +857,7 @@ class Product_Feed_Admin {
 			}
 		}
 
-		wp_send_json_success($result);
-
-//error_log( print_r($result,true));
-//		  print_r($result) ;
-//		wp_send_json($result);
-//		die();
+		wp_send_json( $result );
 	}
 
 	/**
@@ -937,7 +932,7 @@ class Product_Feed_Admin {
 				$name           .= '-';
 				$result[ $key ] = $this->save_custom_product( $value['element'], $result[ $key ], $name );
 			} else {
-				$result[ $key ] = sanitize_text_field($_POST[ $name ] ?? "");
+				$result[ $key ] = sanitize_text_field( $_POST[ $name ] ?? "" );
 			}
 		}
 
@@ -1037,17 +1032,11 @@ class Product_Feed_Admin {
 	}
 
 	public function create_sheet() {
-		if ( ! isset( $_GET['_ajax_nonce'] ) || ! wp_verify_nonce( $_GET['_ajax_nonce'], 'pfvi_nonce_js' ) ) {
-			return;
+		if ( isset( $_GET['_ajax_nonce'] ) && wp_verify_nonce( $_GET['_ajax_nonce'], 'pfvi_nonce_js' ) ) {
+			$language  = $_GET['language'] ?? "";
+			$sheet_obj = new PFVI_Sheet();
+			$create    = $sheet_obj->create( $language );
+			wp_send_json( $create );
 		}
-		if ( $this->data_config->check_token_expire() ) {
-			$this->data_config->get_token();
-		}
-
-		$language = $_GET['language'] ?? "";
-		$sheet_obj = new PFVI_Sheet();
-		$create    = $sheet_obj->create($language);
-		echo json_encode( $create );
-		die();
 	}
 }

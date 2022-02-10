@@ -799,26 +799,26 @@ class Product_Feed_Config {
 					),
 					"amount" => array(
 						"title"       => esc_html__( "Amount", 'gshopping-wc-google-shopping' ),
-						"placeholder" => esc_html__( "Amount", 'gshopping-wc-google-shopping' ),
-						"type"        => "element",
+						"placeholder" => esc_html__( "35.00 USD", 'gshopping-wc-google-shopping' ),
+						"type"        => "text",
 						"level"       => 1,
 						"required"    => true,
-						"element"     => array(
-							"value"    => array(
-								"title"       => esc_html__( "Value", 'gshopping-wc-google-shopping' ),
-								"placeholder" => esc_html__( "Value", 'gshopping-wc-google-shopping' ),
-								"type"        => "float",
-								"level"       => 2,
-								"required"    => true,
-							),
-							"currency" => array(
-								"title"       => esc_html__( "Currency", 'gshopping-wc-google-shopping' ),
-								"placeholder" => esc_html__( "Currency", 'gshopping-wc-google-shopping' ),
-								"type"        => "text",
-								"level"       => 2,
-								"required"    => true,
-							),
-						)
+//						"element"     => array(
+//							"value"    => array(
+//								"title"       => esc_html__( "Value", 'gshopping-wc-google-shopping' ),
+//								"placeholder" => esc_html__( "Value", 'gshopping-wc-google-shopping' ),
+//								"type"        => "float",
+//								"level"       => 2,
+//								"required"    => true,
+//							),
+//							"currency" => array(
+//								"title"       => esc_html__( "Currency", 'gshopping-wc-google-shopping' ),
+//								"placeholder" => esc_html__( "Currency", 'gshopping-wc-google-shopping' ),
+//								"type"        => "text",
+//								"level"       => 2,
+//								"required"    => true,
+//							),
+//						)
 					),
 				),
 			),
@@ -851,27 +851,27 @@ class Product_Feed_Config {
 						"required"    => true,
 					),
 					"amount"        => array(
-						"title"       => esc_html__( "Value", 'gshopping-wc-google-shopping' ),
-						"placeholder" => esc_html__( "Value", 'gshopping-wc-google-shopping' ),
-						"type"        => "element",
+						"title"       => esc_html__( "Amout", 'gshopping-wc-google-shopping' ),
+						"placeholder" => esc_html__( "35.00 USD", 'gshopping-wc-google-shopping' ),
+						"type"        => "text",
 						"level"       => 1,
 						"required"    => true,
-						"element"     => array(
-							"value"    => array(
-								"title"       => esc_html__( "Value", 'gshopping-wc-google-shopping' ),
-								"placeholder" => esc_html__( "Value", 'gshopping-wc-google-shopping' ),
-								"type"        => "float",
-								"level"       => 2,
-								"required"    => true,
-							),
-							"currency" => array(
-								"title"       => esc_html__( "Currency", 'gshopping-wc-google-shopping' ),
-								"placeholder" => esc_html__( "Currency", 'gshopping-wc-google-shopping' ),
-								"type"        => "text",
-								"level"       => 2,
-								"required"    => true,
-							),
-						),
+//						"element"     => array(
+//							"value"    => array(
+//								"title"       => esc_html__( "Value", 'gshopping-wc-google-shopping' ),
+//								"placeholder" => esc_html__( "Value", 'gshopping-wc-google-shopping' ),
+//								"type"        => "float",
+//								"level"       => 2,
+//								"required"    => true,
+//							),
+//							"currency" => array(
+//								"title"       => esc_html__( "Currency", 'gshopping-wc-google-shopping' ),
+//								"placeholder" => esc_html__( "Currency", 'gshopping-wc-google-shopping' ),
+//								"type"        => "text",
+//								"level"       => 2,
+//								"required"    => true,
+//							),
+//						),
 					),
 				),
 			),
@@ -1902,8 +1902,8 @@ class Product_Feed_Config {
 		$refresh_token = $this->get_params( 'refresh_token' );
 		$list_params   = $this->get_params( "" );
 
-//		200 days
 		$timelife_refresh = 200;
+		//		200 days
 
 		$url_page_config = admin_url( "admin.php?page=vi-product-feed" ) . '#config_credential';
 		if ( empty( $client_id ) ) {

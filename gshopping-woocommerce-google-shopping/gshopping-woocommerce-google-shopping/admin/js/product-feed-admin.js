@@ -115,22 +115,14 @@ jQuery(document).ready(function (jQuery) {
                 data: data,
                 dataType: 'json',
                 success(res) {
-                    console.log("success");
-                    console.log(res.responseText)
-
-                    //     var response = JSON.parse(res);
-                    //
-                    // console.log(response)
-                    // pfvi_pushToXml(1, response);
+                    console.log(res);
+                    // console.log(typeof res.data)
+                    pfvi_pushToXml(1, res);
                 },
                 error(error) {
                     console.log("error");
                     console.log(error);
                 },
-                // complete(res){
-                //     console.log("complete");
-                //     console.log(res)
-                // }
             });
         }
     });
@@ -157,8 +149,7 @@ jQuery(document).ready(function (jQuery) {
                     type: 'GET',
                     data: data,
                     success: function (res) {
-                        let response = JSON.parse(res);
-                        pfvi_makeApiCallAppendSheet(1, response);
+                        pfvi_makeApiCallAppendSheet(1, res);
                     },
                     error(error) {
                         console.log(error);
@@ -181,8 +172,7 @@ jQuery(document).ready(function (jQuery) {
                             type: 'GET',
                             data: data,
                             success: function (res) {
-                                let response = JSON.parse(res)
-                                pfvi_makeApiCallAppendSheet(1, response)
+                                pfvi_makeApiCallAppendSheet(1, res)
                             },
                             error(error) {
                                 console.log(error);
@@ -215,8 +205,7 @@ jQuery(document).ready(function (jQuery) {
                     type: 'GET',
                     data: data,
                     success: function (res) {
-                        let response = JSON.parse(res)
-                        pfvi_preparePushMerchant(1, response)
+                        pfvi_preparePushMerchant(1, res)
                     },
                     error(error) {
                         console.log(error);
@@ -239,8 +228,7 @@ jQuery(document).ready(function (jQuery) {
                             type: 'GET',
                             data: data,
                             success: function (res) {
-                                let response = JSON.parse(res)
-                                pfvi_preparePushMerchant(1, response)
+                                pfvi_preparePushMerchant(1, res)
                             },
                             error(error) {
                                 console.log(error);
@@ -387,13 +375,13 @@ function pfvi_makeApiCallAppendSheet(currentRequest, productIdChecked) {
             data: data,
             success(res) {
                 console.log(res);
-
                 // recursive
                 if (currentRequest < countRequest) {
                     pfvi_makeApiCallAppendSheet(++currentRequest, productIdChecked);
                 }
             },
             error(error) {
+                console.log(error)
                 jQuery('#pfvi_loading_page').remove();
             },
             complete() {

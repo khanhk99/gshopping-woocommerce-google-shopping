@@ -177,7 +177,7 @@ class Product_Feed_Merchant_Config {
 								$result_two .= $result_three;
 								$result_two .= " ";
 							} else {
-								$result_two .= $meta_data_value[ $key_two ];
+								$result_two .= !empty($meta_data_value[ $key_two ]) ? $meta_data_value[ $key_two ] : "";
 								$result_two .= ":";
 							}
 						}
