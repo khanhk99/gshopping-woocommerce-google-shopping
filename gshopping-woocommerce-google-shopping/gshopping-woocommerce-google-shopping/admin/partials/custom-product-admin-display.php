@@ -71,8 +71,9 @@ function form_html( $attributes, $merchant_config, $prefix ) {
 					$merchant_config->product_mapping_merchant( $name ) );
 
 			} else if ( $attribute['type'] === "select" ) {
-				printf( '<select name="%s">',
-					esc_attr( $name ) );
+				printf( '<select name="%s"><option value="">%s</option>',
+					esc_attr( $name ),
+					esc_html(' '));
 
 				foreach ( $attribute['option'] as $key_option => $option ) {
 					printf( '<option value="%s" %s %s>%s</option>',

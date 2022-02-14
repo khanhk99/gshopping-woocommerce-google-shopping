@@ -18,7 +18,7 @@ class Product_Feed_Merchant_Config {
 		$this->meta_data_product = get_post_meta( $product_id, $this->meta_key, true );
 
 		$this->mapping_data = array(
-			"offer_id"                  => ( ! empty( $this->wc_product->get_sku() ) ) ? $this->wc_product->get_sku() : $this->wc_product->get_id(),
+			"offer_id"                  => $this->get_offer_id(),
 			"title"                     => $this->wc_product->get_title(),
 			"description"               => $this->clean_description( $this->wc_product->get_description() ),
 			"link"                      => $this->wc_product->get_permalink(),
@@ -28,8 +28,21 @@ class Product_Feed_Merchant_Config {
 			"price"                     => ! empty( $this->wc_product->get_regular_price() ) ? $this->get_price() : "",
 			"sale_price"                => ! empty( $this->wc_product->get_sale_price() ) ? $this->get_sale_price() : '',
 			"sale_price_effective_date" => $this->get_sale_price_effective_date(),
-//			"condition"                 => $this->get_condition(),
 			"shipping"                  => $this->get_shipping(),
+			//attributes
+			"item_group_id"             => $this->get_item_group_id(),
+			"age_group"                 => $this->get_attribute( 'age_group' ),
+			"color"                     => $this->get_attribute( 'color' ),
+			"gender"                    => $this->get_attribute( 'gender' ),
+			"material"                  => $this->get_attribute( 'material' ),
+			"pattern"                   => $this->get_attribute( 'pattern' ),
+			"size"                      => $this->get_attribute( 'size' ),
+			//product measurements
+			"product_length"            => $this->get_product_length(),
+			"product_width"             => $this->get_product_width(),
+			"product_height"            => $this->get_product_height(),
+			"product_weight"            => $this->get_product_weight(),
+			"tax"                       => $this->get_tax(),
 		);
 
 		$this->data_value = array(
@@ -140,8 +153,10 @@ class Product_Feed_Merchant_Config {
 									$result_two .= $result_three;
 									$result_two .= "";
 								} else {
-									$result_two .= $item_multi[ $key_two ];
-									$result_two .= ":";
+									if(isset($item_multi[ $key_two ])){
+										$result_two .= $item_multi[ $key_two ];
+										$result_two .= ":";
+									}
 								}
 							}
 							$result_multi .= $result_two;
@@ -161,6 +176,7 @@ class Product_Feed_Merchant_Config {
 					$result_multi .= ",";
 				}
 				$result[ $count ] = $result_multi;
+
 				$count ++;
 			} else {
 				if ( isset( $arr[ $key ]['element'] ) ) {
@@ -177,7 +193,7 @@ class Product_Feed_Merchant_Config {
 								$result_two .= $result_three;
 								$result_two .= " ";
 							} else {
-								$result_two .= !empty($meta_data_value[ $key_two ]) ? $meta_data_value[ $key_two ] : "";
+								$result_two .= ! empty( $meta_data_value[ $key_two ] ) ? $meta_data_value[ $key_two ] : "";
 								$result_two .= ":";
 							}
 						}
@@ -313,8 +329,137 @@ class Product_Feed_Merchant_Config {
 			}
 		}
 
-//		echo json_encode($shipping);
-//		die();
 		return $shipping;
+	}
+
+	public function get_attribute( $name ) {
+		$config_object = new Product_Feed_Config();
+		$attr          = $config_object->get_params( 'attributes_map' );
+		$attr_map      = $attr[ $name ] ?? "";
+
+		return $this->wc_product->get_attribute( $attr_map );
+	}
+
+	public function get_offer_id() {
+		if ( ! empty( $this->wc_product->get_sku() ) ) {
+			return $this->wc_product->get_sku();
+		} else {
+			return $this->wc_product->get_id();
+		}
+	}
+
+	public function get_item_group_id() {
+		$product_type = $this->wc_product->get_type();
+		if ( $product_type === "variable" ) {
+			return $this->get_offer_id();
+		} elseif ( $product_type === "variation" ) {
+			return $this->wc_product->get_parent_id();
+		} else {
+			return "";
+		}
+	}
+
+	public function get_product_length() {
+		return $this->convert_unit( $this->wc_product->get_length(), $this->dimension_unit() );
+	}
+
+	public function get_product_width() {
+		return $this->convert_unit( $this->wc_product->get_width(), $this->dimension_unit() );
+	}
+
+	public function get_product_height() {
+		return $this->convert_unit( $this->wc_product->get_height(), $this->dimension_unit() );
+	}
+
+	public function get_product_weight() {
+		return $this->convert_unit( $this->wc_product->get_weight(), $this->weight_unit() );
+	}
+
+	public function convert_unit( $value, $unit ) {
+		$value       = intval( $value );
+		$convert_arr = array(
+			"m"   => array(
+				"value" => $value * 100,
+				"unit"  => "cm",
+			),
+			"cm"  => array(
+				"value" => $value * 1,
+				"unit"  => "cm",
+			),
+			"mm"  => array(
+				"value" => $value * 0.1,
+				"unit"  => "cm",
+			),
+			"in"  => array(
+				"value" => $value * 1,
+				"unit"  => "in",
+			),
+			"yd"  => array(
+				"value" => $value * 36,
+				"unit"  => "in",
+			),
+			"kg"  => array(
+				"value" => $value * 1,
+				"unit"  => "kg",
+			),
+			"g"   => array(
+				"value" => $value * 1,
+				"unit"  => "g",
+			),
+			"lbs" => array(
+				"value" => $value * 1,
+				"unit"  => "lb",
+			),
+			"oz"  => array(
+				"value" => $value * 1,
+				"unit"  => "oz",
+			),
+		);
+
+		return $convert_arr[ $unit ];
+	}
+
+	public function weight_unit() {
+		return get_option( 'woocommerce_weight_unit' );
+	}
+
+	public function dimension_unit() {
+		return get_option( 'woocommerce_dimension_unit' );
+	}
+
+	public function get_tax() {
+		$tax_class = $this->wc_product->get_tax_class();
+
+		$taxes = WC_Tax::get_rates_for_tax_class( $tax_class );
+		$tax   = array(
+			'type' => 'multiple'
+		);
+
+		foreach ( $taxes as $tax_value ) {
+			$postcode_count = $tax_value->postcode_count;
+			if ( $postcode_count == 0 ) {
+				$tax_item             = array();
+
+				$tax_item['country']  = $tax_value->tax_rate_country;
+				$tax_item['region']   = $tax_value->tax_rate_state;
+				$tax_item['rate']     = $tax_value->tax_rate;
+				$tax_item['tax_ship'] = ( $tax_value->tax_rate_shipping == 1 ) ? "yes" : "no";
+
+				array_push( $tax, $tax_item );
+			} else {
+				foreach ( $tax_value->postcode as $postcode ) {
+					$tax_item                = array();
+
+					$tax_item['country']     = $tax_value->tax_rate_country;
+					$tax_item['postal_code'] = $postcode;
+					$tax_item['rate']        = $tax_value->tax_rate;
+					$tax_item['tax_ship']    = ( $tax_value->tax_rate_shipping == 1 ) ? "yes" : "no";
+
+					array_push( $tax, $tax_item );
+				}
+			}
+		}
+
+		return $tax;
 	}
 }

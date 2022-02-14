@@ -29,7 +29,7 @@ class PFVI_Sheet {
 		return json_decode( $all_data['body'] );
 	}
 
-	public function create($language) {
+	public function create( $language ) {
 		$data_config  = new Product_Feed_Config();
 		$title        = $language . " - GShopping - WooCommerce Google Shopping";
 		$api_key      = $data_config->get_params( 'api_key' );
@@ -122,18 +122,15 @@ class PFVI_Sheet {
 		}
 
 		$product_arr = $merchant_config->convert_meta_data_to_string( $config_params, $meta_data );
-
-		$sheet          = $data_config->get_params( "sheet" );
-		$spreadsheet_id = $sheet[ $lang ]['sheet_id'];
-		$api_key        = $data_config->get_params( 'api_key' );
-		$access_token   = $data_config->get_params( "access_token" );
-
-		$all_data = $this->get_all( $lang );
-		$all_ids  = $all_data->values[0];
-
-		$key = array_search( $product_id, $all_ids );
-
+		$all_data    = $this->get_all( $lang );
+		$all_ids     = $all_data->values[0];
+		$key         = array_search( $product_arr[0], $all_ids );
 		if ( ! empty( $key ) ) {
+			$sheet          = $data_config->get_params( "sheet" );
+			$spreadsheet_id = $sheet[ $lang ]['sheet_id'];
+			$api_key        = $data_config->get_params( 'api_key' );
+			$access_token   = $data_config->get_params( "access_token" );
+
 			$range_update = $sheet[ $lang ]['sheet_range'] . '!A' . ++ $key;
 
 			$url    = "https://sheets.googleapis.com/v4/spreadsheets/$spreadsheet_id/values/$range_update?valueInputOption=RAW&key=$api_key";

@@ -59,6 +59,8 @@ foreach ( $attributes as $key => $attribute ) {
 		$attribute_not_required[ $key ] = $attribute;
 	}
 }
+
+$attributes_taxonomies = wc_get_attribute_taxonomies();
 ?>
 
     <div class="wrap">
@@ -555,7 +557,7 @@ foreach ( $attributes as $key => $attribute ) {
 					);
 					?>
                 </div>
-                <table class="form-table">
+                <table class="form-table" id="product_attributes_select">
                     <tbody>
                     <tr>
                         <th><?php esc_html_e( "Select attributes", 'gshopping-wc-google-shopping' ) ?></th>
@@ -564,6 +566,7 @@ foreach ( $attributes as $key => $attribute ) {
 							foreach ( $attribute_required as $key => $attribute ) {
 								printf( '<input name="attributes[]" value="%s" hidden>', esc_attr( $key ) );
 							}
+
 							?>
                             <select class="vi-ui fluid search dropdown" multiple="" name="attributes[]">
 								<?php
@@ -574,11 +577,18 @@ foreach ( $attributes as $key => $attribute ) {
 										esc_attr( $attribute_selected ),
 										esc_html( $attribute["title"], 'gshopping-wc-google-shopping' )
 									);
-
 								}
 								?>
                             </select>
-                            <div class="pfvi_mt-1">
+                            <div>
+                                <button class="vi-ui blue basic right floated button mini" type="button" id="clear-all">
+                                    Clear all
+                                </button>
+                                <button class="vi-ui blue basic right floated button mini" type="button"
+                                        id="select-all">Select all
+                                </button>
+                            </div>
+                            <div class="pfvi_mt-3">
                                 <span><b>Required: </b></span>
 								<?php
 								foreach ( $attribute_required as $key => $attribute ) {
@@ -588,6 +598,42 @@ foreach ( $attributes as $key => $attribute ) {
 								}
 								?>
                             </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <table class="form-table" id="map_attributes">
+                    <tbody>
+                    <tr>
+                        <th><?php esc_html_e( "Map attributes", 'gshopping-wc-google-shopping' ) ?></th>
+                        <td colspan="2">
+                            <table class="vi-ui table very basic collapsing">
+                                <tbody>
+                                <tr>
+                                    <td><b>Google attribute</b></td>
+                                    <td><b>Product attribute</b></td>
+                                </tr>
+								<?php foreach ( $params_config['attributes_map'] as $key => $value ) { ?>
+                                    <tr>
+                                        <td><?php esc_html_e( $key, 'gshopping-wc-google-shopping' ) ?></td>
+                                        <td>
+                                            <select class="vi-ui dropdown" name="attributes_map[<?php echo esc_html($key) ?>]">
+												<?php
+                                                printf('<option value="">%s</option>', esc_html__(' ', 'gshopping-wc-google-shopping'));
+												foreach ( $attributes_taxonomies as $attributes_taxonomy ) {
+													$attributes_taxonomy_selected = ($value === $attributes_taxonomy->attribute_name) ? " selected" : "";
+													printf( '<option value="%s" %s>%s</option>',
+														esc_attr($attributes_taxonomy->attribute_name),
+                                                        esc_attr($attributes_taxonomy_selected),
+														esc_html( $attributes_taxonomy->attribute_label, 'gshopping-wc-google-shopping' ) );
+												}
+												?>
+                                            </select>
+                                        </td>
+                                    </tr>
+								<?php } ?>
+                                </tbody>
+                            </table>
                         </td>
                     </tr>
                     </tbody>
@@ -614,9 +660,9 @@ foreach ( $attributes as $key => $attribute ) {
                                        value="<?php echo esc_attr( $params_config["api_key"] ) ?>"
                                        placeholder="AIz...kauBJ7aq7X7Of">
                                 <div class="vi-ui pointing label">
-	                                <?php
-	                                esc_html_e('Get this value in Google API Console', 'gshopping-wc-google-shopping');
-	                                ?>
+									<?php
+									esc_html_e( 'Get this value in Google API Console', 'gshopping-wc-google-shopping' );
+									?>
                                 </div>
                             </div>
                         </td>
@@ -629,9 +675,9 @@ foreach ( $attributes as $key => $attribute ) {
                                        value="<?php echo esc_attr( $params_config["client_id"] ) ?>"
                                        placeholder="...apps.googleusercontent.com">
                                 <div class="vi-ui pointing label">
-	                                <?php
-	                                esc_html_e('Get this value in Google API Console', 'gshopping-wc-google-shopping');
-	                                ?>
+									<?php
+									esc_html_e( 'Get this value in Google API Console', 'gshopping-wc-google-shopping' );
+									?>
                                 </div>
                             </div>
                         </td>
@@ -644,9 +690,9 @@ foreach ( $attributes as $key => $attribute ) {
                                        value="<?php echo esc_attr( $params_config["client_secret"] ) ?>"
                                        placeholder="GOCSP...tsda3oFb">
                                 <div class="vi-ui pointing label">
-	                                <?php
-	                                esc_html_e('Get this value in Google API Console', 'gshopping-wc-google-shopping');
-	                                ?>
+									<?php
+									esc_html_e( 'Get this value in Google API Console', 'gshopping-wc-google-shopping' );
+									?>
                                 </div>
                             </div>
                         </td>
@@ -665,9 +711,9 @@ foreach ( $attributes as $key => $attribute ) {
                                     </button>
                                 </div>
                                 <div class="vi-ui pointing label">
-                                    <?php
-                                        esc_html_e('Paste this value to Google API Console', 'gshopping-wc-google-shopping');
-                                    ?>
+									<?php
+									esc_html_e( 'Paste this value to Google API Console', 'gshopping-wc-google-shopping' );
+									?>
                                 </div>
                             </div>
                         </td>
@@ -681,7 +727,7 @@ foreach ( $attributes as $key => $attribute ) {
                                     OAuth
                                 </a>
                                 <div class="vi-ui left pointing label">
-                                    <?php esc_html_e('Click here to Authenticate after complete fields above', 'gshopping-wc-google-shopping'); ?>
+									<?php esc_html_e( 'Click here to Authenticate after complete fields above', 'gshopping-wc-google-shopping' ); ?>
                                 </div>
                             </div>
                         </td>
@@ -700,7 +746,7 @@ foreach ( $attributes as $key => $attribute ) {
 									'img'  => 'use-fetch-schedule-1.png',
 								],
 								[
-									'text' => esc_html__( 'Click copy button then paste into File URL setting Scheduled fetch\'feed you created', 'gshopping-wc-google-shopping' ),
+									'text' => esc_html__( 'Click copy button then paste into File URL setting Scheduled fetch\'s feed you created', 'gshopping-wc-google-shopping' ),
 									'img'  => 'use-fetch-schedule-2.png'
 								],
 								[
@@ -717,11 +763,11 @@ foreach ( $attributes as $key => $attribute ) {
 							<?php
 							$guides = [
 								[
-									'text' => esc_html__( 'If you had a file google sheet, get Spreadsheet\'ID and Spreadsheet\'range follow the picture below', 'gshopping-wc-google-shopping' ),
+									'text' => esc_html__( 'If you had a file google sheet, get Spreadsheet ID and Spreadsheet range following the picture below', 'gshopping-wc-google-shopping' ),
 									'img'  => 'use-gg-sheet-1.png'
 								],
 								[
-									'text' => esc_html__( 'Paste Spreadsheet\'ID and Spreadsheet\'range you took at previous step or you can click create a new file then fields will be autocomplete', 'gshopping-wc-google-shopping' ),
+									'text' => esc_html__( 'Paste Spreadsheet ID and Spreadsheet range you took at previous step or you can click create a new file then fields will be autocomplete', 'gshopping-wc-google-shopping' ),
 									'img'  => 'use-gg-sheet-2.png'
 								],
 								[
@@ -767,12 +813,12 @@ foreach ( $attributes as $key => $attribute ) {
 										esc_attr__( 'Access website ', 'gshopping-wc-google-shopping' ),
 										esc_attr( 'https://console.cloud.google.com/apis/library' ),
 										esc_attr( 'https://console.cloud.google.com/apis/library' ),
-										esc_attr__( ' search and enable "Google Sheets API"\'library, "Content API for Shopping"\'library', 'gshopping-wc-google-shopping' )
+										esc_attr__( ' search and enable "Google Sheets API" library, "Content API for Shopping" library', 'gshopping-wc-google-shopping' )
 									),
 									'img'  => 'credentials-1.png'
 								],
 								[
-									'text' => esc_attr__( 'At OAuth consent screen tab of Google console, create OAuth consent screen then click PUBLISH APP', 'gshopping-wc-google-shopping' ),
+									'text' => esc_attr__( 'At OAuth consent screen tab of Google console, create OAuth consent screen then click "PUBLISH APP"', 'gshopping-wc-google-shopping' ),
 									'img'  => 'credentials-2.png'
 								],
 								[

@@ -9,6 +9,7 @@ class Product_Feed_Config {
 	private $params;
 	private $defaults;
 	private $attributes;
+	private $attributes_map;
 
 	private $schedule;
 	private $sheet;
@@ -19,6 +20,14 @@ class Product_Feed_Config {
 	public function __construct() {
 		$option = get_option( PFVI_PREFIX_META . 'woocommerce_google_shopping' );
 
+		$this->attributes_map = array(
+			'age_group' => '',
+			'color'     => '',
+			'gender'    => '',
+			'material'  => '',
+			'pattern'   => '',
+			'size'      => '',
+		);
 
 		$this->schedule = array(
 			"schedule_enable" => "on",
@@ -66,22 +75,33 @@ class Product_Feed_Config {
 				"image_link",
 				"availability",
 				"price",
-				"condition"
+				"condition",
+				"item_group_id"
+			),
+
+			"attributes_map" => array(
+				'age_group' => '',
+				'color'     => '',
+				'gender'    => '',
+				'material'  => '',
+				'pattern'   => '',
+				'size'      => '',
 			),
 		);
 
 		$this->params = array(
-			"api_key"       => $option["api_key"] ?? "",
-			"client_id"     => $option["client_id"] ?? "",
-			"client_secret" => $option["client_secret"] ?? "",
-			"access_token"  => $option["access_token"] ?? "",
-			"refresh_token" => $option["refresh_token"] ?? "",
-			"redirect_uri"  => $option["redirect_uri"] ?? $this->defaults["redirect_uri"],
-			"merchant_id"   => $option["merchant_id"] ?? "",
-			"schedule"      => ( isset( $option["schedule"] ) && ! empty( $option["schedule"] ) ) ? $option["schedule"] : $this->defaults["schedule"],
-			"sheet"         => ( isset( $option["sheet"] ) && ! empty( $option["sheet"] ) ) ? $option["sheet"] : $this->defaults["sheet"],
-			"api"           => ( isset( $option["api"] ) && ! empty( $option["api"] ) ) ? $option["api"] : $this->defaults["api"],
-			"attributes"    => ( isset( $option["attributes"] ) && ! empty( $option["attributes"] ) ) ? $option["attributes"] : $this->defaults["attributes"],
+			"api_key"        => $option["api_key"] ?? "",
+			"client_id"      => $option["client_id"] ?? "",
+			"client_secret"  => $option["client_secret"] ?? "",
+			"access_token"   => $option["access_token"] ?? "",
+			"refresh_token"  => $option["refresh_token"] ?? "",
+			"redirect_uri"   => $option["redirect_uri"] ?? $this->defaults["redirect_uri"],
+			"merchant_id"    => $option["merchant_id"] ?? "",
+			"schedule"       => ( isset( $option["schedule"] ) && ! empty( $option["schedule"] ) ) ? $option["schedule"] : $this->defaults["schedule"],
+			"sheet"          => ( isset( $option["sheet"] ) && ! empty( $option["sheet"] ) ) ? $option["sheet"] : $this->defaults["sheet"],
+			"api"            => ( isset( $option["api"] ) && ! empty( $option["api"] ) ) ? $option["api"] : $this->defaults["api"],
+			"attributes"     => ( isset( $option["attributes"] ) && ! empty( $option["attributes"] ) ) ? $option["attributes"] : $this->defaults["attributes"],
+			"attributes_map" => $option["attributes_map"] ?? $this->defaults["attributes_map"],
 		);
 
 		$this->country = array(
@@ -748,9 +768,32 @@ class Product_Feed_Config {
 					"unit"  => array(
 						"title"       => esc_html__( "Unit", 'gshopping-wc-google-shopping' ),
 						"placeholder" => esc_html__( "Unit", 'gshopping-wc-google-shopping' ),
-						"type"        => "text",
+						"type"        => "select",
 						"level"       => 1,
 						"required"    => true,
+						"option"      => array(
+							"oz"   => esc_html( "oz" ),
+							"lb"   => esc_html( "lb" ),
+							"mg"   => esc_html( "mg" ),
+							"g"    => esc_html( "g" ),
+							"kg"   => esc_html( "kg" ),
+							"floz" => esc_html( "floz" ),
+							"pt"   => esc_html( "pt" ),
+							"qt"   => esc_html( "qt" ),
+							"gal"  => esc_html( "gal" ),
+							"ml"   => esc_html( "ml" ),
+							"cl"   => esc_html( "cl" ),
+							"l"    => esc_html( "l" ),
+							"cbm"  => esc_html( "cbm" ),
+							"in"   => esc_html( "in" ),
+							"ft"   => esc_html( "ft" ),
+							"yd"   => esc_html( "yd" ),
+							"cm"   => esc_html( "cm" ),
+							"m"    => esc_html( "m" ),
+							"sqft" => esc_html( "sqft" ),
+							"sqm"  => esc_html( "sqm" ),
+							"ct"   => esc_html( "ct" ),
+						),
 					),
 				)
 			),
@@ -767,16 +810,51 @@ class Product_Feed_Config {
 					"value" => array(
 						"title"       => esc_html__( "Value", 'gshopping-wc-google-shopping' ),
 						"placeholder" => esc_html__( "Value", 'gshopping-wc-google-shopping' ),
-						"type"        => "float",
+						"type"        => "select",
 						"level"       => 1,
 						"required"    => true,
+						"option"      => array(
+							"1"    => esc_html( "1" ),
+							"10"   => esc_html( "10" ),
+							"100"  => esc_html( "100" ),
+							"2"    => esc_html( "2" ),
+							"4"    => esc_html( "4" ),
+							"8"    => esc_html( "8" ),
+							"75"   => esc_html( "75" ),
+							"750"  => esc_html( "750" ),
+							"50"   => esc_html( "50" ),
+							"1000" => esc_html( "1000" ),
+						),
 					),
 					"unit"  => array(
 						"title"       => esc_html__( "Unit", 'gshopping-wc-google-shopping' ),
 						"placeholder" => esc_html__( "Unit", 'gshopping-wc-google-shopping' ),
-						"type"        => "text",
+						"type"        => "select",
 						"level"       => 1,
 						"required"    => true,
+						"option"      => array(
+							"oz"   => esc_html( "oz" ),
+							"lb"   => esc_html( "lb" ),
+							"mg"   => esc_html( "mg" ),
+							"g"    => esc_html( "g" ),
+							"kg"   => esc_html( "kg" ),
+							"floz" => esc_html( "floz" ),
+							"pt"   => esc_html( "pt" ),
+							"qt"   => esc_html( "qt" ),
+							"gal"  => esc_html( "gal" ),
+							"ml"   => esc_html( "ml" ),
+							"cl"   => esc_html( "cl" ),
+							"l"    => esc_html( "l" ),
+							"cbm"  => esc_html( "cbm" ),
+							"in"   => esc_html( "in" ),
+							"ft"   => esc_html( "ft" ),
+							"yd"   => esc_html( "yd" ),
+							"cm"   => esc_html( "cm" ),
+							"m"    => esc_html( "m" ),
+							"sqft" => esc_html( "sqft" ),
+							"sqm"  => esc_html( "sqm" ),
+							"ct"   => esc_html( "ct" ),
+						),
 					),
 				)
 			),
@@ -1196,7 +1274,7 @@ class Product_Feed_Config {
 			"item_group_id"                 => array(
 				"support"     => "6324507",
 				"title"       => esc_html__( "Item group ID", 'gshopping-wc-google-shopping' ),
-				"required"    => "condition",
+				"required"    => true,
 				"description" => esc_html__( "ID for a group of products that come in different versions (variants).", 'gshopping-wc-google-shopping' ),
 				"type"        => "text",
 				"max"         => 50,
@@ -1219,6 +1297,7 @@ class Product_Feed_Config {
 						"type"        => "float",
 						"level"       => 1,
 						"required"    => true,
+						"max"         => 3000
 					),
 					"unit"  => array(
 						"title"       => esc_html__( "Unit", 'gshopping-wc-google-shopping' ),
@@ -1249,6 +1328,7 @@ class Product_Feed_Config {
 						"type"        => "float",
 						"level"       => 1,
 						"required"    => true,
+						"max"         => 3000
 					),
 					"unit"  => array(
 						"title"       => esc_html__( "Unit", 'gshopping-wc-google-shopping' ),
@@ -1279,6 +1359,7 @@ class Product_Feed_Config {
 						"type"        => "float",
 						"level"       => 1,
 						"required"    => true,
+						"max"         => 3000
 					),
 					"unit"  => array(
 						"title"       => esc_html__( "Unit", 'gshopping-wc-google-shopping' ),
@@ -1309,6 +1390,7 @@ class Product_Feed_Config {
 						"type"        => "float",
 						"level"       => 1,
 						"required"    => true,
+						"max"         => 2000
 					),
 					"unit"  => array(
 						"title"       => esc_html__( "Unit", 'gshopping-wc-google-shopping' ),
@@ -1440,10 +1522,10 @@ class Product_Feed_Config {
 				"title"       => esc_html__( "Excluded countries for Shopping ads", 'gshopping-wc-google-shopping' ),
 				"required"    => false,
 				"description" => esc_html__( "A setting that allows you to exclude countries where your products are advertised on Shopping ads.", 'gshopping-wc-google-shopping' ),
-				"type"        => "text",
-				"max"         => 2,
+				"type"        => "select",
 				"placeholder" => "DE",
 				"level"       => 0,
+				"option"      => $this->country,
 			),
 			"shipping"                      => array(
 				"support"     => "6324484",
@@ -1682,10 +1764,10 @@ class Product_Feed_Config {
 				"title"       => esc_html__( "Ships from country", 'gshopping-wc-google-shopping' ),
 				"required"    => false,
 				"description" => esc_html__( "A setting that allows you to provide the country from which your product will typically ship.", 'gshopping-wc-google-shopping' ),
-				"type"        => "text",
-				"max"         => 2,
+				"type"        => "select",
 				"placeholder" => "DE",
 				"level"       => 0,
+				"option"      => $this->country,
 			),
 			"transit_time_label"            => array(
 				"support"     => "9298965",
@@ -1751,14 +1833,14 @@ class Product_Feed_Config {
 						"required"    => false,
 						"placeholder" => "80302",
 					),
-					"location_id" => array(
-						"title"       => esc_html__( "Location ID", 'gshopping-wc-google-shopping' ),
-						"placeholder" => esc_html__( "Location ID", 'gshopping-wc-google-shopping' ),
-						"type"        => "text",
-						"level"       => 1,
-						"required"    => false,
-						"placeholder" => "",
-					),
+//					"location_id" => array(
+//						"title"       => esc_html__( "Location ID", 'gshopping-wc-google-shopping' ),
+//						"placeholder" => esc_html__( "Location ID", 'gshopping-wc-google-shopping' ),
+//						"type"        => "text",
+//						"level"       => 1,
+//						"required"    => false,
+//						"placeholder" => "",
+//					),
 					"tax_ship"    => array(
 						"title"       => esc_html__( "Tax ship", 'gshopping-wc-google-shopping' ),
 						"placeholder" => esc_html__( "Tax ship", 'gshopping-wc-google-shopping' ),
@@ -1777,9 +1859,9 @@ class Product_Feed_Config {
 					),
 				),
 			),
-			"Tax category"                  => array(
+			"tax_category"                  => array(
 				"support"     => "7569847",
-				"title"       => esc_html__( "tax_category", 'gshopping-wc-google-shopping' ),
+				"title"       => esc_html__( "Tax category", 'gshopping-wc-google-shopping' ),
 				"required"    => false,
 				"description" => esc_html__( "A category that classifies your product by specific tax rules.", 'gshopping-wc-google-shopping' ),
 				"type"        => "text",
@@ -1931,7 +2013,7 @@ class Product_Feed_Config {
 		$client->setRedirectUri( $redirect_uri );
 		$client->setAccessType( 'offline' );
 		$client->setPrompt( 'select_account consent' );
-		$client->setIncludeGrantedScopes(true);
+		$client->setIncludeGrantedScopes( true );
 
 		if ( ( ! empty( $access_token ) ) && ( ! isset( $_GET['code'] ) ) ) {
 			$client->setAccessToken( $access_token );
@@ -1950,7 +2032,7 @@ class Product_Feed_Config {
 						if ( isset( $_GET['view'] ) && ( $_GET['view'] == 'oauth' ) ) {
 							header( "Location: $auth_url" );
 						} else {
-							echo sanitize_url($auth_url);
+							echo sanitize_url( $auth_url );
 							die();
 						}
 //					header("Location: $auth_url");
@@ -1976,7 +2058,7 @@ class Product_Feed_Config {
 				if ( isset( $_GET['view'] ) && ( $_GET['view'] == 'oauth' ) ) {
 					header( "Location: $auth_url" );
 				} else {
-					echo sanitize_url($auth_url);
+					echo sanitize_url( $auth_url );
 					die();
 				}
 //				header("Location: $auth_url");

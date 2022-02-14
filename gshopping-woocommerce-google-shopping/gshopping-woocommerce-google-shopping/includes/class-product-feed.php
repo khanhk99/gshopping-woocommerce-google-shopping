@@ -171,6 +171,7 @@ class Product_Feed {
 		$this->loader->add_action( 'wp_ajax_' . PFVI_PREFIX . 'create_sheet', $plugin_admin, 'create_sheet' );
 		$this->loader->add_action( 'wp_ajax_' . PFVI_PREFIX . 'wizard_credential', $plugin_admin, 'wizard_credential' );
 		$this->loader->add_action( 'wp_ajax_' . PFVI_PREFIX . 'wizard_data', $plugin_admin, 'wizard_data' );
+		$this->loader->add_action( 'wp_ajax_' . PFVI_PREFIX . 'fill_products', $plugin_admin, 'fill_products' );
 		$this->loader->add_action( 'activated_plugin', $plugin_admin, 'activation_redirect' );
 //		$this->loader->add_action('updated_post_meta', $plugin_admin, 'product_updated');
 		//		filter hook

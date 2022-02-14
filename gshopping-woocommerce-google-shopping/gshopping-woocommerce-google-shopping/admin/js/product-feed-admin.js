@@ -1,11 +1,24 @@
 jQuery(document).ready(function (jQuery) {
-    // vi-ui js
+    /**
+     *
+     */
     jQuery('.menu .item').tab({
         history: true,
         historyType: 'hash',
     });
     jQuery('.vi-ui.accordion').accordion();
     jQuery('.vi-ui.dropdown').dropdown();
+
+    jQuery('#product_attributes_select').on('click', '#select-all', function () {
+        let options = jQuery('#product_attributes_select select > option').toArray().map(
+            (obj) => obj.value
+        );
+        jQuery('#product_attributes_select select').dropdown('set exactly', options);
+    });
+
+    jQuery('#product_attributes_select').on('click', '#clear-all', function () {
+        jQuery('#product_attributes_select select').dropdown('clear');
+    })
     // end vi-ui js
 
     jQuery("#posts-filter").on("click", '.button.action[type="submit"]', function (event) {
@@ -97,7 +110,7 @@ jQuery(document).ready(function (jQuery) {
     });
 
     /**
-     * Upload all product
+     * push all product
      */
     jQuery('.wrap').on('click','.push-all-schedule',function () {
         let languageText = jQuery(this).find('input').attr('language');
@@ -116,7 +129,6 @@ jQuery(document).ready(function (jQuery) {
                 dataType: 'json',
                 success(res) {
                     console.log(res);
-                    // console.log(typeof res.data)
                     pfvi_pushToXml(1, res);
                 },
                 error(error) {
@@ -249,6 +261,16 @@ jQuery(document).ready(function (jQuery) {
             }
         });
     });
+
+    /**
+     * mapping attributes
+     */
+    // jQuery('#map_attributes').css('display', 'none');
+    // let attributes_map = pfvi_woo_admin_products_js.params_config.attributes_map;
+    // jQuery.each(attributes_map, function (k, v) {
+    //     let length = jQuery(`#product_attributes_select a[data-value=${k}]`).length;
+    //     console.log(length);
+    // });
 });
 
 function pfvi_getProductChecked() {
@@ -296,6 +318,7 @@ function pfvi_pushToXml(currentRequest, productIdChecked) {
         type: 'GET',
         data: data,
         success(response) {
+            console.log(JSON.parse(response));
             if (currentRequest < countRequest) {
                 pfvi_pushToXml(++currentRequest, productIdChecked)
             }

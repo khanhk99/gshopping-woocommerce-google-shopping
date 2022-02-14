@@ -32,7 +32,7 @@ class Product_Feed_Activator {
 	 * @since    1.0.0
 	 */
 	public static function activate() {
-//		exit( wp_redirect( admin_url( 'admin.php?page=pfvi-wizard' ) ) );
+
 	}
 
 }

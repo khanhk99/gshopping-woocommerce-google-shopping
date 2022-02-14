@@ -75,6 +75,7 @@ jQuery(document).ready(function (jQuery) {
     });
 
     jQuery('.pfvi_wizard-main').on('click', 'button[step=wizard_product_data]', function () {
+        jQuery('.pfvi_wizard-step').removeClass('active');
         let typeFeed = sessionStorage.getItem("pfviFeedType");
         if (typeFeed.includes('feed_sheet')) {
             jQuery('#google_sheet table').addClass('active');
@@ -85,7 +86,6 @@ jQuery(document).ready(function (jQuery) {
         if(typeFeed.includes('feed_schedule')){
             jQuery('#fetch_schedule table').addClass('active');
         }
-        jQuery('.pfvi_wizard-step').removeClass('active');
         jQuery('#config_google_merchant').addClass('active');
     });
 
@@ -99,11 +99,13 @@ jQuery(document).ready(function (jQuery) {
             contentType: false,
             processData: false,
             success(response) {
+                console.log("success");
                 jQuery('.pfvi_wizard-main button[step=wizard_feed_data]').removeClass('loading');
                 jQuery('.pfvi_wizard-step').removeClass('active');
                 jQuery('#complete_wizard').addClass('active');
             },
             error(error) {
+                console.log("error");
                 console.log(error);
                 jQuery('.pfvi_wizard-main button[step=wizard_feed_data]').removeClass('loading');
             },

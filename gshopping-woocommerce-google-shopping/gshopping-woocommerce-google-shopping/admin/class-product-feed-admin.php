@@ -56,7 +56,7 @@ class Product_Feed_Admin {
 	/**
 	 * Initialize the class and set its properties.
 	 *
-	 * @param string $product -feed       The name of this plugin.
+	 * @param $product_feed
 	 * @param string $version The version of this plugin.
 	 *
 	 * @since    1.0.0
@@ -75,18 +75,20 @@ class Product_Feed_Admin {
 	}
 
 	/**
-	 * Register the stylesheets for the admin area.
+	 * @param $plugin
 	 *
 	 * @since    1.0.0
 	 */
 
-	public function activation_redirect() {
+	public function activation_redirect( $plugin ) {
 		$notice = pfvi_check_conditional();
 		if ( empty( $notice ) ) {
-			$active = get_option( PFVI_PREFIX_META . 'count_active' );
-			if ( empty( $active ) || ( $active !== '1' ) ) {
-				update_option( PFVI_PREFIX_META . 'count_active', '1', false );
-				exit( wp_redirect( admin_url( 'admin.php?page=pfvi-wizard' ) ) );
+			if ( $plugin === 'gshopping-woocommerce-google-shopping/gshopping-woocommerce-google-shopping.php' ) {
+				$active = get_option( PFVI_PREFIX_META . 'count_active' );
+				if ( empty( $active ) || ( $active !== '1' ) ) {
+					update_option( PFVI_PREFIX_META . 'count_active', '1', false );
+					exit( wp_redirect( admin_url( 'admin.php?page=pfvi-wizard' ) ) );
+				}
 			}
 		}
 	}
@@ -357,7 +359,10 @@ class Product_Feed_Admin {
 
 			update_option( PFVI_PREFIX_META . 'woocommerce_google_shopping', $data_save, false );
 
-			die();
+			wp_send_json_success();
+//			die();
+		} else {
+			wp_send_json_error();
 		}
 	}
 
@@ -439,8 +444,8 @@ class Product_Feed_Admin {
 		}
 
 		$name_file_xml = 'feed-' . $language;
-
-		$xml_body = '<?xml version="1.0" ?>
+//		header( "Content-Type: text/xml;" );
+		$xml_body = '<?xml version="1.0" encoding="UTF-8"?>
 			<rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">
 				<channel>
 				</channel>
@@ -486,7 +491,8 @@ class Product_Feed_Admin {
 
 	public function clear_xml() {
 		$language = sanitize_text_field( $_POST['language'] );
-		$xml_body = '<?xml version="1.0" ?>
+//		header( "Content-Type: text/xml;" );
+		$xml_body = '<?xml version="1.0" encoding="UTF-8"?>
 			<rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">
 				<channel>
 				</channel>
@@ -534,7 +540,12 @@ class Product_Feed_Admin {
 		return false;
 	}
 
-	public function push_xml( $product_ids ) {
+	/**
+	 * Handle data to push
+	 *
+	 * @since    1.0.0
+	 */
+	public function fill_products( $product_ids ) {
 		$productIds = [];
 		if ( ! empty( $product_ids ) ) {
 			$productIds = array_map( 'sanitize_text_field', $product_ids );
@@ -545,6 +556,20 @@ class Product_Feed_Admin {
 			}
 			$productIds = array_map( 'sanitize_text_field', $_GET["productIds"] );
 		}
+		//check variations
+		foreach ( $productIds as $product_id ) {
+			$wc_product = wc_get_product( $product_id );
+			if ( $wc_product->get_type( 'variable' ) ) {
+				$children   = $wc_product->get_children();
+				$productIds = array_merge( $productIds, $children );
+			}
+		}
+
+		return $productIds;
+	}
+
+	public function push_xml($product_id) {
+		$productIds = $this->fill_products( $product_id );
 
 //		get attributes exist inside config
 		$config_params = $this->data_config->mapping_attr_config();
@@ -603,10 +628,12 @@ class Product_Feed_Admin {
 										if ( isset( $element['element'] ) ) {
 											$value    = $param_value[ $row ][ $key_element ]['value'];
 											$currency = $param_value[ $row ][ $key_element ]['currency'];
-											$xml_parent->addChild( 'g:' . $key_element, $value . " " . $currency, 'g' );
+											$xml_parent->addChild( 'g:' . $key_element, htmlspecialchars( $value . " " . $currency ), 'g' );
 										} else {
-											$value_child = $param_value[ $row ][ $key_element ];
-											$xml_parent->addChild( 'g:' . $key_element, $value_child, 'g' );
+											if(isset($param_value[ $row ][ $key_element ])){
+												$value_child = $param_value[ $row ][ $key_element ];
+												$xml_parent->addChild( 'g:' . $key_element, htmlspecialchars( $value_child ), 'g' );
+											}
 										}
 									}
 								} else {
@@ -616,14 +643,14 @@ class Product_Feed_Admin {
 										$value_child .= $param_value[ $row ][ $key_element ];
 										$value_child .= " ";
 									}
-									$xml_item->addChild( 'g:' . $key_param, sanitize_text_field( $value_child ), 'g' );
+									$xml_item->addChild( 'g:' . $key_param, htmlspecialchars( $value_child ), 'g' );
 								}
 							} else {
 //						    1 dimensional
 								if ( $key_param === 'offer_id' ) {
-									$xml_item->addChild( 'g:id', $param_value[ $row ], 'g' );
+									$xml_item->addChild( 'g:id', htmlspecialchars( $param_value[ $row ] ), 'g' );
 								} else {
-									$xml_item->addChild( 'g:' . $key_param, $param_value[ $row ], 'g' );
+									$xml_item->addChild( 'g:' . $key_param, htmlspecialchars( $param_value[ $row ] ), 'g' );
 								}
 							}
 						}
@@ -639,10 +666,10 @@ class Product_Feed_Admin {
 										foreach ( $element['element'] as $k_child => $v_child ) {
 											$value_child .= $merchant_config->product_mapping_merchant( $key_param . '-' . $key_element . '-' . $k_child );
 										}
-										$xml_parent->addChild( 'g:' . $key_element, $value_child, 'g' );
+										$xml_parent->addChild( 'g:' . $key_element, htmlspecialchars( $value_child ), 'g' );
 									} else {
 										$value_child = $merchant_config->product_mapping_merchant( $key_param . '-' . $key_element );
-										$xml_parent->addChild( 'g:' . $key_element, $value_child, 'g' );
+										$xml_parent->addChild( 'g:' . $key_element, htmlspecialchars( $value_child ), 'g' );
 									}
 								}
 							} else {
@@ -653,15 +680,15 @@ class Product_Feed_Admin {
 									$value_child .= " ";
 								}
 
-								$xml_item->addChild( 'g:' . $key_param, sanitize_text_field( $value_child ), 'g' );
+								$xml_item->addChild( 'g:' . $key_param, htmlspecialchars( $value_child ), 'g' );
 							}
 
 						} else {
 //						    1 dimensional
 							if ( $key_param === 'offer_id' ) {
-								$xml_item->addChild( 'g:id', $param_value, 'g' );
+								$xml_item->addChild( 'g:id', htmlspecialchars( $param_value ), 'g' );
 							} else {
-								$xml_item->addChild( 'g:' . $key_param, $param_value, 'g' );
+								$xml_item->addChild( 'g:' . $key_param, htmlspecialchars( $param_value ), 'g' );
 							}
 						}
 					}
@@ -671,22 +698,8 @@ class Product_Feed_Admin {
 		}
 	}
 
-	/**
-	 * Handle data to push
-	 *
-	 * @since    1.0.0
-	 */
 	public function push_sheet() {
-		$productIds = [];
-		if ( ! empty( $product_ids ) ) {
-			$productIds = array_map( 'sanitize_text_field', $product_ids );
-		}
-		if ( isset( $_GET["productIds"] ) ) {
-			if ( ! isset( $_GET['_ajax_nonce'] ) || ! wp_verify_nonce( $_GET['_ajax_nonce'], 'pfvi_nonce_js' ) ) {
-				return;
-			}
-			$productIds = array_map( 'sanitize_text_field', $_GET["productIds"] );
-		}
+		$productIds = $this->fill_products( [] );
 
 //		get attributes exist inside config
 		$config_params = $this->data_config->mapping_attr_config();
@@ -749,16 +762,7 @@ class Product_Feed_Admin {
 	}
 
 	public function push_merchant() {
-		$productIds = [];
-		if ( ! empty( $product_ids ) ) {
-			$productIds = array_map( 'sanitize_text_field', $product_ids );
-		}
-		if ( isset( $_GET["productIds"] ) ) {
-			if ( ! isset( $_GET['_ajax_nonce'] ) || ! wp_verify_nonce( $_GET['_ajax_nonce'], 'pfvi_nonce_js' ) ) {
-				return;
-			}
-			$productIds = array_map( 'sanitize_text_field', $_GET["productIds"] );
-		}
+		$productIds = $this->fill_products( [] );
 
 //		get attributes exist inside config
 		$config_params = $this->data_config->mapping_attr_config();
@@ -946,39 +950,37 @@ class Product_Feed_Admin {
 	}
 
 	public function updateXml( $product_id ) {
-		$dir = "";
-		if ( class_exists( 'Polylang' ) ) {
-			$lang = pll_get_post_language( $product_id );
-			if ( empty( $lang ) ) {
-				$lang = pll_default_language();
+		//Get language of product
+		$lang_product = $this->get_lang_product( $product_id );
+
+		//Check config enable
+		if ( $this->check_enable( 'schedule', $lang_product ) ) {
+			$dir = PFVI_DIR_UPLOAD . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR . 'feed-' . $lang_product . '.xml';
+
+			if ( file_exists( $dir ) ) {
+				$xml = simplexml_load_file( $dir );
+
+				$merchant_config = new Product_Feed_Merchant_Config( $product_id );
+				$list_items      = $xml->channel->item;
+				$id              = $merchant_config->product_mapping_merchant( 'offer_id' );
+
+				/**
+				 * if existed id, delete then add again
+				 */
+				$count_item = 0;
+				foreach ( $list_items as $item ) {
+					$item_prefix = $item->children( 'g' );
+					if ( $item_prefix->id == $id ) {
+						//id existed
+						unset( $xml->channel->item[ $count_item ] );
+						file_put_contents( $dir, $xml->asXML() );
+						$this->push_xml( [ $product_id ] );
+						break;
+					}
+					$count_item ++;
+				}
 			}
-		} else {
-			$lang = PFVI_LANGUAGE;
 		}
-
-		$dir = PFVI_DIR_UPLOAD . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR . 'feed-' . $lang . '.xml';
-
-		if ( ! file_exists( $dir ) ) {
-			$this->generate_xml( $lang );
-		}
-
-		$xml = simplexml_load_file( $dir );
-
-		$merchant_config = new Product_Feed_Merchant_Config( $product_id );
-		$list_items      = $xml->channel->item;
-		$id              = $merchant_config->product_mapping_merchant( 'offer_id' );
-
-		$count_item = 0;
-		foreach ( $list_items as $item ) {
-			$item_prefix = $item->children( 'g' );
-			if ( $item_prefix->id == $id ) {
-				unset( $xml->channel->item[ $count_item ] );
-				break;
-			}
-			$count_item ++;
-		}
-		file_put_contents( $dir, $xml->asXML() );
-		$this->push_xml( [ $product_id ] );
 	}
 
 	public function updateSheet( $product_id ) {
@@ -988,9 +990,20 @@ class Product_Feed_Admin {
 		//Check config enable
 		if ( $this->check_enable( 'sheet', $lang_product ) ) {
 			$this->data_config->get_token();
+
 			$sheet_obj = new PFVI_Sheet();
 			$sheet_obj->update_title( $lang_product );
-			$sheet_obj->update_product( $lang_product, $product_id );
+
+			$wc_product = wc_get_product( $product_id );
+
+			if ( $wc_product->is_type( 'variable' ) ) {
+				$children = $wc_product->get_children();
+				foreach ( $children as $child ) {
+					$sheet_obj->update_product( $lang_product, $child );
+				}
+			} else {
+				$sheet_obj->update_product( $lang_product, $product_id );
+			}
 		}
 	}
 
@@ -1001,8 +1014,20 @@ class Product_Feed_Admin {
 		//Check config enable
 		if ( $this->check_enable( 'api', $lang_product ) ) {
 			$this->data_config->get_token();
+
 			$api_obj = new PFVI_Api();
-			$api_obj->update( $lang_product, $product_id );
+
+			$wc_product = wc_get_product( $product_id );
+
+			if ( $wc_product->is_type( 'variable' ) ) {
+				$children = $wc_product->get_children();
+				foreach ( $children as $child ) {
+					$api_obj->update( $lang_product, $child );
+				}
+			} else {
+				$api_obj->update( $lang_product, $product_id );
+			}
+
 		}
 	}
 
@@ -1022,13 +1047,6 @@ class Product_Feed_Admin {
 
 	public function get_client() {
 		$this->data_config->get_token();
-	}
-
-	public function product_updated_messages( $messages ) {
-		$messages['post'][4] = 'Just published a post custom text';
-		$messages['post'][1] = 'Just published a post custom text';
-
-		return $messages;
 	}
 
 	public function create_sheet() {
