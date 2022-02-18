@@ -160,7 +160,7 @@ class Product_Feed {
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'add_menu_admin' );
 		$this->loader->add_action( 'add_meta_boxes', $plugin_admin, 'add_meta_boxes_merchant' );
 		$this->loader->add_action( 'save_post_product', $plugin_admin, 'save_custom_content_meta_box' );
-		$this->loader->add_action( 'woocommerce_update_product', $plugin_admin, 'update_product_merchant' );
+//		$this->loader->add_action( 'woocommerce_update_product', $plugin_admin, 'update_product_merchant' );
 		$this->loader->add_action( 'wp_ajax_' . PFVI_PREFIX . 'push_xml', $plugin_admin, 'push_xml' );
 		$this->loader->add_action( 'wp_ajax_' . PFVI_PREFIX . 'push_sheet', $plugin_admin, 'push_sheet' );
 		$this->loader->add_action( 'wp_ajax_' . PFVI_PREFIX . 'push_merchant', $plugin_admin, 'push_merchant' );

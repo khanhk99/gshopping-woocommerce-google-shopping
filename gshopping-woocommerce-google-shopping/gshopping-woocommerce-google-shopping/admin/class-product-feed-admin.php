@@ -559,7 +559,7 @@ class Product_Feed_Admin {
 		//check variations
 		foreach ( $productIds as $product_id ) {
 			$wc_product = wc_get_product( $product_id );
-			if ( $wc_product->get_type( 'variable' ) ) {
+			if ( $wc_product->get_type() == 'variable' ) {
 				$children   = $wc_product->get_children();
 				$productIds = array_merge( $productIds, $children );
 			}
@@ -568,7 +568,7 @@ class Product_Feed_Admin {
 		return $productIds;
 	}
 
-	public function push_xml($product_id) {
+	public function push_xml( $product_id ) {
 		$productIds = $this->fill_products( $product_id );
 
 //		get attributes exist inside config
@@ -630,7 +630,7 @@ class Product_Feed_Admin {
 											$currency = $param_value[ $row ][ $key_element ]['currency'];
 											$xml_parent->addChild( 'g:' . $key_element, htmlspecialchars( $value . " " . $currency ), 'g' );
 										} else {
-											if(isset($param_value[ $row ][ $key_element ])){
+											if ( isset( $param_value[ $row ][ $key_element ] ) ) {
 												$value_child = $param_value[ $row ][ $key_element ];
 												$xml_parent->addChild( 'g:' . $key_element, htmlspecialchars( $value_child ), 'g' );
 											}
@@ -899,6 +899,7 @@ class Product_Feed_Admin {
 				array(
 					'attributes'      => $attributes,
 					'merchant_config' => $merchant_config,
+					'data_config'     => $this->data_config
 				),
 				'',
 				PFVI_ADMIN_TEMPLATES
@@ -914,10 +915,13 @@ class Product_Feed_Admin {
 	public function save_custom_content_meta_box( $post_id ) {
 		$attributes_all  = $this->data_config->get_params( "attributes" );
 		$merchant_config = new Product_Feed_Merchant_Config( $post_id );
+		$attr_wc         = $merchant_config->product_mapping_merchant( "" );
 
 		$attributes = array();
 		foreach ( $attributes_all as $attr ) {
-			$attributes[ $attr ] = $this->data_config->get_attributes( $attr );
+			if ( ! array_key_exists( $attr, $attr_wc ) ) {
+				$attributes[ $attr ] = $this->data_config->get_attributes( $attr );
+			}
 		}
 
 		$meta_values = $this->save_custom_product( $attributes, [], '' );
@@ -932,11 +936,29 @@ class Product_Feed_Admin {
 	private function save_custom_product( $attributes, $result, $prefix ) {
 		foreach ( $attributes as $key => $value ) {
 			$name = $prefix . $key;
+
 			if ( $value['type'] === 'element' ) {
 				$name           .= '-';
 				$result[ $key ] = $this->save_custom_product( $value['element'], $result[ $key ], $name );
 			} else {
-				$result[ $key ] = sanitize_text_field( $_POST[ $name ] ?? "" );
+
+				if ( isset( $_POST[ $name ] ) && is_array( $_POST[ $name ] ) ) {
+					$result[ $key ] = array_map( 'sanitize_text_field', $_POST[ $name ] );
+				} else {
+					$result[ $key ] = sanitize_text_field( $_POST[ $name ] ?? "" );
+				}
+			}
+
+			if ( ( $value['level'] == 0 ) && ( $value['repeated'] ) ) {
+				if ( $value['type'] == 'select' ) {
+					$result[ $key ]['type'] = 'multiple';
+				} elseif ( $value['type'] == 'element' ) {
+					$result[ $key ]         = $this->data_config->convert_repeated( $result[ $key ] );
+					$result[ $key ]['type'] = 'multiple';
+				} else {
+					$result[ $key ]         = explode( ",", $result[ $key ] );
+					$result[ $key ]['type'] = 'multiple';
+				}
 			}
 		}
 
@@ -944,9 +966,23 @@ class Product_Feed_Admin {
 	}
 
 	public function update_product_merchant( $product_id ) {
-		$this->updateXml( $product_id );
-		$this->updateSheet( $product_id );
-		$this->updateMerchant( $product_id );
+		$times = did_action( 'woocommerce_update_product' );
+		if ( $times === 1 ) {
+			$wc_product = wc_get_product( $product_id );
+			if ( $wc_product->get_type() != 'variation' ) {
+				//Get language of product
+				$lang_product = $this->get_lang_product( $product_id );
+				if ( $this->check_enable( 'schedule', $lang_product ) ) {
+					$this->updateXml( $product_id );
+				}
+				if ( $this->check_enable( 'sheet', $lang_product ) ) {
+					$this->updateSheet( $product_id );
+				}
+				if ( $this->check_enable( 'api', $lang_product ) ) {
+					$this->updateMerchant( $product_id );
+				}
+			}
+		}
 	}
 
 	public function updateXml( $product_id ) {
@@ -954,14 +990,18 @@ class Product_Feed_Admin {
 		$lang_product = $this->get_lang_product( $product_id );
 
 		//Check config enable
-		if ( $this->check_enable( 'schedule', $lang_product ) ) {
-			$dir = PFVI_DIR_UPLOAD . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR . 'feed-' . $lang_product . '.xml';
+		$dir = PFVI_DIR_UPLOAD . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR . 'feed-' . $lang_product . '.xml';
 
-			if ( file_exists( $dir ) ) {
-				$xml = simplexml_load_file( $dir );
+		if ( file_exists( $dir ) ) {
+			$xml = simplexml_load_file( $dir );
 
-				$merchant_config = new Product_Feed_Merchant_Config( $product_id );
-				$list_items      = $xml->channel->item;
+			$wc_product = wc_get_product( $product_id );
+			$children   = $wc_product->get_children();
+			array_push( $children, $product_id );
+
+			$list_items = $xml->channel->item;
+			foreach ( $children as $child ) {
+				$merchant_config = new Product_Feed_Merchant_Config( $child );
 				$id              = $merchant_config->product_mapping_merchant( 'offer_id' );
 
 				/**
@@ -974,7 +1014,7 @@ class Product_Feed_Admin {
 						//id existed
 						unset( $xml->channel->item[ $count_item ] );
 						file_put_contents( $dir, $xml->asXML() );
-						$this->push_xml( [ $product_id ] );
+						$this->push_xml( [ $child ] );
 						break;
 					}
 					$count_item ++;
@@ -987,23 +1027,19 @@ class Product_Feed_Admin {
 		//Get language of product
 		$lang_product = $this->get_lang_product( $product_id );
 
-		//Check config enable
-		if ( $this->check_enable( 'sheet', $lang_product ) ) {
-			$this->data_config->get_token();
+		$this->data_config->get_token();
 
-			$sheet_obj = new PFVI_Sheet();
-			$sheet_obj->update_title( $lang_product );
+		$sheet_obj = new PFVI_Sheet();
+		$sheet_obj->update_title( $lang_product );
 
-			$wc_product = wc_get_product( $product_id );
+		$wc_product = wc_get_product( $product_id );
 
-			if ( $wc_product->is_type( 'variable' ) ) {
-				$children = $wc_product->get_children();
-				foreach ( $children as $child ) {
-					$sheet_obj->update_product( $lang_product, $child );
-				}
-			} else {
-				$sheet_obj->update_product( $lang_product, $product_id );
-			}
+		if ( $wc_product->is_type( 'variable' ) ) {
+			$children = $wc_product->get_children();
+			array_push( $children, $product_id );
+			$sheet_obj->update_product( $lang_product, $children );
+		} else {
+			$sheet_obj->update_product( $lang_product, [ $product_id ] );
 		}
 	}
 
@@ -1012,22 +1048,18 @@ class Product_Feed_Admin {
 		$lang_product = $this->get_lang_product( $product_id );
 
 		//Check config enable
-		if ( $this->check_enable( 'api', $lang_product ) ) {
-			$this->data_config->get_token();
+		$this->data_config->get_token();
 
-			$api_obj = new PFVI_Api();
+		$api_obj = new PFVI_Api();
 
-			$wc_product = wc_get_product( $product_id );
+		$wc_product = wc_get_product( $product_id );
 
-			if ( $wc_product->is_type( 'variable' ) ) {
-				$children = $wc_product->get_children();
-				foreach ( $children as $child ) {
-					$api_obj->update( $lang_product, $child );
-				}
-			} else {
-				$api_obj->update( $lang_product, $product_id );
-			}
-
+		if ( $wc_product->is_type( 'variable' ) ) {
+			$children = $wc_product->get_children();
+			array_push( $children, $product_id );
+			$api_obj->update( $lang_product, $children );
+		} else {
+			$api_obj->update( $lang_product, [ $product_id ] );
 		}
 	}
 
@@ -1056,5 +1088,9 @@ class Product_Feed_Admin {
 			$create    = $sheet_obj->create( $language );
 			wp_send_json( $create );
 		}
+	}
+
+	public function compare_value( $old_value, $new_value ) {
+
 	}
 }

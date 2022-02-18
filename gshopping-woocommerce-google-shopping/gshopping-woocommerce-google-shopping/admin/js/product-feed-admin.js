@@ -7,7 +7,9 @@ jQuery(document).ready(function (jQuery) {
         historyType: 'hash',
     });
     jQuery('.vi-ui.accordion').accordion();
-    jQuery('.vi-ui.dropdown').dropdown();
+    jQuery('.vi-ui.dropdown').dropdown({
+        clearable: true
+    });
 
     jQuery('#product_attributes_select').on('click', '#select-all', function () {
         let options = jQuery('#product_attributes_select select > option').toArray().map(
@@ -398,6 +400,7 @@ function pfvi_makeApiCallAppendSheet(currentRequest, productIdChecked) {
             data: data,
             success(res) {
                 console.log(res);
+                // console.log(JSON.parse(res));
                 // recursive
                 if (currentRequest < countRequest) {
                     pfvi_makeApiCallAppendSheet(++currentRequest, productIdChecked);

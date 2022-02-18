@@ -2,16 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ec7e7af7-6d17-4e94-bd1f-c7e3b36dce4e" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gshopping-woocommerce-google-shopping.zip" beforeDir="false" afterPath="$PROJECT_DIR$/gshopping-woocommerce-google-shopping.zip" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/admin/PFV_Api.php" beforeDir="false" afterPath="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/admin/PFV_Api.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/admin/PFV_Sheet.php" beforeDir="false" afterPath="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/admin/PFV_Sheet.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/admin/class-data-merchant-config.php" beforeDir="false" afterPath="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/admin/class-data-merchant-config.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/admin/class-product-feed-admin.php" beforeDir="false" afterPath="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/admin/class-product-feed-admin.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/admin/css/product-feed-admin.css" beforeDir="false" afterPath="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/admin/css/product-feed-admin.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/admin/js/product-feed-admin.js" beforeDir="false" afterPath="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/admin/js/product-feed-admin.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/admin/js/setup-wizard.js" beforeDir="false" afterPath="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/admin/js/setup-wizard.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/admin/partials/custom-product-admin-display.php" beforeDir="false" afterPath="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/admin/partials/custom-product-admin-display.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/admin/partials/product-feed-admin-display.php" beforeDir="false" afterPath="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/admin/partials/product-feed-admin-display.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/includes/class-product-feed-activator.php" beforeDir="false" afterPath="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/includes/class-product-feed-activator.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/includes/class-product-feed-config.php" beforeDir="false" afterPath="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/includes/class-product-feed-config.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/includes/class-product-feed.php" beforeDir="false" afterPath="$PROJECT_DIR$/gshopping-woocommerce-google-shopping/includes/class-product-feed.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../test/test.php" beforeDir="false" afterPath="$PROJECT_DIR$/../test/test.php" afterDir="false" />
@@ -80,6 +80,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="D:/xampp/htdocs/mainsv/wp-content/plugins/xml-for-google-merchant-center" />
+    <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="reference.webide.settings.project.settings.php" />
     <property name="two.files.diff.last.used.file" value="D:/xampp/htdocs/testing/wp-content/plugins/gshopping-woocommerce-google-shopping/admin/class-product-feed-admin.php" />
   </component>
@@ -114,7 +115,12 @@
       <workItem from="1644454951202" duration="24016000" />
       <workItem from="1644541598873" duration="27587000" />
       <workItem from="1644627421843" duration="25383000" />
-      <workItem from="1644800528417" duration="23445000" />
+      <workItem from="1644800528417" duration="23787000" />
+      <workItem from="1644886927462" duration="26584000" />
+      <workItem from="1644973168140" duration="25595000" />
+      <workItem from="1645059882781" duration="21846000" />
+      <workItem from="1645146019459" duration="13744000" />
+      <workItem from="1645162073574" duration="605000" />
     </task>
     <servers />
   </component>
@@ -133,16 +139,5 @@
         </entry>
       </map>
     </option>
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/gshopping-woocommerce-google-shopping/admin/class-product-feed-admin.php</url>
-          <line>618</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

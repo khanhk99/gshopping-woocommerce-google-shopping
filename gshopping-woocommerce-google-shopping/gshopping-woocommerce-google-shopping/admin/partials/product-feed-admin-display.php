@@ -580,8 +580,8 @@ $attributes_taxonomies = wc_get_attribute_taxonomies();
 								}
 								?>
                             </select>
-                            <div>
-                                <button class="vi-ui blue basic right floated button mini" type="button" id="clear-all">
+                            <div class="pfvi_mt-2p">
+                                <button class="vi-ui red basic right floated button mini" type="button" id="clear-all">
                                     Clear all
                                 </button>
                                 <button class="vi-ui blue basic right floated button mini" type="button"
@@ -607,7 +607,7 @@ $attributes_taxonomies = wc_get_attribute_taxonomies();
                     <tr>
                         <th><?php esc_html_e( "Map attributes", 'gshopping-wc-google-shopping' ) ?></th>
                         <td colspan="2">
-                            <table class="vi-ui table very basic collapsing">
+                            <table class="vi-ui table very basic">
                                 <tbody>
                                 <tr>
                                     <td><b>Google attribute</b></td>
@@ -619,7 +619,6 @@ $attributes_taxonomies = wc_get_attribute_taxonomies();
                                         <td>
                                             <select class="vi-ui dropdown" name="attributes_map[<?php echo esc_html($key) ?>]">
 												<?php
-                                                printf('<option value="">%s</option>', esc_html__(' ', 'gshopping-wc-google-shopping'));
 												foreach ( $attributes_taxonomies as $attributes_taxonomy ) {
 													$attributes_taxonomy_selected = ($value === $attributes_taxonomy->attribute_name) ? " selected" : "";
 													printf( '<option value="%s" %s>%s</option>',

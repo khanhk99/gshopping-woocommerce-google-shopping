@@ -24,13 +24,44 @@ function pfv_test_html() {
 //	update_option( PFVI_PREFIX_META . 'woocommerce_google_shopping', $option, false );
 //	$option = get_option( PFVI_PREFIX_META . 'woocommerce_google_shopping' );
 //	echo '<pre>' . print_r( $option, true ) . '</pre>';
-
+//
 	$merchant_config_obj = new Product_Feed_Merchant_Config(5809);
 	echo '<pre>' . print_r($merchant_config_obj->product_mapping_merchant("") , true ) . '</pre>';
 
-	$wc_product = wc_get_product( 5809 );
+	$meta_data_product = get_post_meta( 5809, PFVI_PREFIX_META . "merchant_data", true );
+	echo '<pre>' . print_r($meta_data_product , true ) . '</pre>';
 
-	$taxes = WC_Tax::get_rates_for_tax_class( $wc_product->get_tax_class() );
-	echo '<pre>' . print_r($taxes , true ) . '</pre>';
+//	$arr = array(
+//		'0' => array(
+//			'a' => 'a1',
+//			'b' => 'b1',
+//			'c' => 'c1',
+//		),
+//		'1' => array(
+//			'a' => 'a2',
+//			'b' => 'b2',
+//			'c' => 'c2',
+//		),
+//		'2' => array(
+//			'a' => 'a3',
+//			'b' => 'b3',
+//			'c' => '',
+//		),
+//	);
+//
+//	$object = new Product_Feed_Config();
+//	echo '<pre>' . print_r($object->reconvert_repeated($arr) , true ) . '</pre>';
 
+//	$wc_product = wc_get_product( 5810 );
+//
+//	if ( $wc_product->get_type() != 'variation' ) {
+//		echo '<pre>' . print_r( $wc_product->get_type(), true ) . '</pre>';
+//	}
+
+//	$times = did_action( 'woocommerce_update_product' );
+//
+//	echo '<pre>' . print_r($times , true ) . '</pre>';
+
+//	$taxes = WC_Tax::get_rates_for_tax_class( $wc_product->get_tax_class() );
+//	echo '<pre>' . print_r($taxes , true ) . '</pre>';
 }

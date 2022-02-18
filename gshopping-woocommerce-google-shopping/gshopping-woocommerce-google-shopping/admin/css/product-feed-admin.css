@@ -28,6 +28,10 @@ Default
     margin-top: 4rem;
 }
 
+.pfvi_mt-2p{
+    margin-top: 2px;
+}
+
 /**
 End default
  */
@@ -63,7 +67,11 @@ End default
 }
 
 .pfvi_custom-product-value select {
-    max-width: 25em;
+    width: 25em;
+}
+
+.pfvi_custom-product-value input{
+    width: 25em;
 }
 
 .pfvi_custom-product {
@@ -357,4 +365,8 @@ body.pfvi_full-screen {
 
 .toplevel_page_vi-product-feed .wrap{
     padding: 0 20px;
+}
+
+.pfvi_custom-product-special{
+    color: #dba617;
 }

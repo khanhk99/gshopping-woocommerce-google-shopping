@@ -38,10 +38,10 @@ class Product_Feed_Merchant_Config {
 			"pattern"                   => $this->get_attribute( 'pattern' ),
 			"size"                      => $this->get_attribute( 'size' ),
 			//product measurements
-			"product_length"            => $this->get_product_length(),
-			"product_width"             => $this->get_product_width(),
-			"product_height"            => $this->get_product_height(),
-			"product_weight"            => $this->get_product_weight(),
+			"shipping_length"           => $this->get_product_length(),
+			"shipping_width"            => $this->get_product_width(),
+			"shipping_height"           => $this->get_product_height(),
+			"shipping_weight"           => $this->get_product_weight(),
 			"tax"                       => $this->get_tax(),
 		);
 
@@ -140,75 +140,56 @@ class Product_Feed_Merchant_Config {
 				$result_multi = "";
 				foreach ( $meta_data_value as $row => $item_multi ) {
 					if ( isset( $arr[ $key ]['element'] ) ) {
-//				        >1 dimensional
-						if ( $arr[ $key ]['separate'] === ":" ) {
-//				            3 dimensional
-							$result_two = "";
-							foreach ( $arr[ $key ]['element'] as $key_two => $value_two ) {
-								if ( isset( $value_two['element'] ) ) {
-									$result_three = "";
-									foreach ( $value_two['element'] as $key_three => $value_three ) {
-										$result_three .= $item_multi[ $key_two ][ $key_three ];
-									}
-									$result_two .= $result_three;
-									$result_two .= "";
-								} else {
-									if(isset($item_multi[ $key_two ])){
-										$result_two .= $item_multi[ $key_two ];
-										$result_two .= ":";
-									}
+//					>1 dimensional
+						$result_two = "";
+						foreach ( $arr[ $key ]['element'] as $key_two => $value_two ) {
+							if ( isset( $value_two['element'] ) ) {
+//							3 dimensional
+								$result_three = "";
+								foreach ( $value_two['element'] as $key_three => $value_three ) {
+									$result_three .= $item_multi[ $key_two ][ $key_three ] ?? "";
+									$result_three .= $value_two['separate'];
 								}
+								$result_two       .= rtrim($result_three, $value_two['separate']);
+								$result_two       .= $arr[ $key ]['separate'];
+							} else {
+//							2 dimensional
+								$result_two       .= $item_multi[ $key_two ] ?? "";
+								$result_two       .= $arr[ $key ]['separate'];
 							}
-							$result_multi .= $result_two;
-						} else {
-//				            2 dimensional (price)
-							$result_two = "";
-							foreach ( $arr[ $key ]['element'] as $key_two => $value_two ) {
-								$result_two .= $item_multi[ $key_two ] ?? "";
-								$result_two .= " ";
-							}
-							$result_multi .= $result_two;
 						}
+						$result_multi .= rtrim($result_two, $arr[ $key ]['separate']);
 					} else {
 //				        1 dimensional
 						$result_multi .= $item_multi;
 					}
 					$result_multi .= ",";
 				}
-				$result[ $count ] = $result_multi;
+				$result[ $count ] = rtrim($result_multi, ",");
 
 				$count ++;
 			} else {
 				if ( isset( $arr[ $key ]['element'] ) ) {
-//				>1 dimensional
-					if ( $arr[ $key ]['separate'] === ":" ) {
-//				    3 dimensional
-						$result_two = "";
-						foreach ( $arr[ $key ]['element'] as $key_two => $value_two ) {
-							if ( isset( $value_two['element'] ) ) {
-								$result_three = "";
-								foreach ( $value_two['element'] as $key_three => $value_three ) {
-									$result_three .= $meta_data_value[ $key_two ][ $key_three ];
-								}
-								$result_two .= $result_three;
-								$result_two .= " ";
-							} else {
-								$result_two .= ! empty( $meta_data_value[ $key_two ] ) ? $meta_data_value[ $key_two ] : "";
-								$result_two .= ":";
+//					>1 dimensional
+					$result_two = "";
+					foreach ( $arr[ $key ]['element'] as $key_two => $value_two ) {
+						if ( isset( $value_two['element'] ) ) {
+//							3 dimensional
+							$result_three = "";
+							foreach ( $value_two['element'] as $key_three => $value_three ) {
+								$result_three .= $meta_data_value[ $key_two ][ $key_three ] ?? "";
+								$result_three .= $value_two['separate'];
 							}
+							$result_two       .= rtrim($result_three, $value_two['separate']);
+							$result_two       .= $arr[ $key ]['separate'];
+						} else {
+//							2 dimensional
+							$result_two       .= $meta_data_value[ $key_two ] ?? "";
+							$result_two       .= $arr[ $key ]['separate'];
 						}
-						$result[ $count ] = $result_two;
-						$count ++;
-					} else {
-//				    2 dimensional (price)
-						$result_two = "";
-						foreach ( $arr[ $key ]['element'] as $key_two => $value_two ) {
-							$result_two .= $meta_data_value[ $key_two ] ?? "";
-							$result_two .= " ";
-						}
-						$result[ $count ] = $result_two;
-						$count ++;
 					}
+					$result[ $count ] = rtrim($result_two, $arr[ $key ]['separate']);
+					$count ++;
 				} else {
 //				1 dimensional
 					$result[ $count ] = $meta_data_value;
@@ -217,6 +198,8 @@ class Product_Feed_Merchant_Config {
 			}
 		}
 
+//		echo json_encode($result);
+//		die();
 		return $result;
 	}
 
@@ -251,6 +234,8 @@ class Product_Feed_Merchant_Config {
 				array_push( $result, $link );
 			}
 
+//			echo '<pre>' . print_r($result , true ) . '</pre>';
+//			die();
 			return $result;
 		} else {
 			return "";
@@ -438,7 +423,7 @@ class Product_Feed_Merchant_Config {
 		foreach ( $taxes as $tax_value ) {
 			$postcode_count = $tax_value->postcode_count;
 			if ( $postcode_count == 0 ) {
-				$tax_item             = array();
+				$tax_item = array();
 
 				$tax_item['country']  = $tax_value->tax_rate_country;
 				$tax_item['region']   = $tax_value->tax_rate_state;
@@ -448,7 +433,7 @@ class Product_Feed_Merchant_Config {
 				array_push( $tax, $tax_item );
 			} else {
 				foreach ( $tax_value->postcode as $postcode ) {
-					$tax_item                = array();
+					$tax_item = array();
 
 					$tax_item['country']     = $tax_value->tax_rate_country;
 					$tax_item['postal_code'] = $postcode;

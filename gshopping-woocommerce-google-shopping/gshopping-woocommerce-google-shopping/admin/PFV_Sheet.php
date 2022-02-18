@@ -6,9 +6,6 @@ require_once PFVI_DIR . 'vendor/autoload.php';
 require_once PFVI_INCLUDES . "class-product-feed-config.php";
 
 class PFVI_Sheet {
-	public function __construct() {
-	}
-
 	public function get_all( $lang, $majorDimension = "COLUMNS" ) {
 		$data_config  = new Product_Feed_Config();
 		$sheet_config = $data_config->get_params( "sheet" )[ $lang ];
@@ -104,46 +101,64 @@ class PFVI_Sheet {
 		return $update;
 	}
 
-	public function update_product( $lang, $product_id ) {
+	public function update_product( $lang, $product_ids = [] ) {
 		$data_config   = new Product_Feed_Config();
 		$config_params = $data_config->mapping_attr_config();
 
-		$merchant_config = new Product_Feed_Merchant_Config( $product_id );
-		$meta_data       = array();
+		$all_data    = $this->get_all( $lang );
+		$all_ids     = $all_data->values[0];
+		$sheet       = $data_config->get_params( "sheet" );
+		$sheet_range = $sheet[ $lang ]['sheet_range'];
 
-		foreach ( $config_params as $key_param => $param ) {
-			if ( ! empty( $merchant_config->product_mapping_merchant( $key_param ) ) ) {
-				$meta_data[ $key_param ] = $merchant_config->product_mapping_merchant( $key_param );
-			} elseif ( $merchant_config->get_default( $key_param ) ) {
-				$meta_data[ $key_param ] = $merchant_config->get_default( $key_param );
-			} else {
-				$meta_data[ $key_param ] = '';
+		$data = array();
+
+		foreach ( $product_ids as $product_id ) {
+			$merchant_config = new Product_Feed_Merchant_Config( $product_id );
+			$meta_data       = array();
+
+			foreach ( $config_params as $key_param => $param ) {
+				if ( ! empty( $merchant_config->product_mapping_merchant( $key_param ) ) ) {
+					$meta_data[ $key_param ] = $merchant_config->product_mapping_merchant( $key_param );
+				} elseif ( $merchant_config->get_default( $key_param ) ) {
+					$meta_data[ $key_param ] = $merchant_config->get_default( $key_param );
+				} else {
+					$meta_data[ $key_param ] = '';
+				}
+			}
+
+			$product_arr = $merchant_config->convert_meta_data_to_string( $config_params, $meta_data );
+			$key         = array_search( $product_arr[0], $all_ids );
+
+			if ( ! empty( $key ) ) {
+				$data_item                   = array();
+				$range_update                = $sheet_range . '!A' . ++ $key;
+				$data_item["range"]          = $range_update;
+				$data_item["values"]         = [ $product_arr ];
+				$data_item["majorDimension"] = "ROWS";
+
+				array_push( $data, $data_item );
 			}
 		}
 
-		$product_arr = $merchant_config->convert_meta_data_to_string( $config_params, $meta_data );
-		$all_data    = $this->get_all( $lang );
-		$all_ids     = $all_data->values[0];
-		$key         = array_search( $product_arr[0], $all_ids );
-		if ( ! empty( $key ) ) {
-			$sheet          = $data_config->get_params( "sheet" );
+		if ( ! empty( $data ) ) {
 			$spreadsheet_id = $sheet[ $lang ]['sheet_id'];
 			$api_key        = $data_config->get_params( 'api_key' );
 			$access_token   = $data_config->get_params( "access_token" );
 
-			$range_update = $sheet[ $lang ]['sheet_range'] . '!A' . ++ $key;
-
-			$url    = "https://sheets.googleapis.com/v4/spreadsheets/$spreadsheet_id/values/$range_update?valueInputOption=RAW&key=$api_key";
-			$update = pfvi_wp_remote_put( $url,
+			$url    = "https://sheets.googleapis.com/v4/spreadsheets/$spreadsheet_id/values:batchUpdate?key=$api_key";
+			wp_remote_post( $url,
 				array(
 					'headers' => array(
 						'Authorization' => $access_token['token_type'] . " " . $access_token['access_token'],
 						'Accept'        => 'application/json',
 						'Content-Type'  => 'application/json',
 					),
-					'body'    => json_encode( array(
-							"values" => [ $product_arr ]
+					'body'    => json_encode(
+						array(
+							"valueInputOption" => "RAW",
+							"data"             => $data
 						)
+
 					),
 				)
 			);
