@@ -121,10 +121,17 @@ class Product_Feed_Merchant_Config {
 
 	private function search_product_mapping( $arr, $key ) {
 		$keys = explode( '-', $key );
+		$value_config = $arr[$keys[0]];
+		if(isset($value_config['type']) && ($value_config['type'] == 'multiple')){
+		    $data_config = new Product_Feed_Config();
+            $data_config->get_attributes($keys[0]);
+            $value_config = $data_config->reconvert_repeated($value_config);
+        }
+
 		if ( count( $keys ) === 2 ) {
-			return $arr[ $keys[0] ][ $keys[1] ] ?? "";
+			return $value_config[ $keys[1] ] ?? "";
 		} elseif ( count( $keys ) === 3 ) {
-			return $arr[ $keys[0] ][ $keys[1] ][ $keys[2] ] ?? "";
+			return $value_config[ $keys[1] ][ $keys[2] ] ?? "";
 		} else {
 			return "";
 		}
